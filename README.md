@@ -1,8 +1,8 @@
-# Your startup name here
+# Smart Weekly Scheduler
 
 [My Notes](notes.md)
 
-A brief description of the application here. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+A personal scheduling app that automatically generates optimized weekly schedules based on your tasks, time constraints, and preferences. Lock in fixed commitments and let the app intelligently distribute remaining tasks across your week for maximum productivity.
 
 > [!NOTE]
 > This is a template for your startup application. You must modify this `README.md` file for each phase of your development. You only need to fill in the section for each deliverable when that deliverable is submitted in Canvas. Without completing the section for a deliverable, the TA will not know what to look for when grading your submission. Feel free to add additional information to each deliverable description, but make sure you at least have the list of rubric items and a description of what you did for each item.
@@ -17,45 +17,62 @@ A brief description of the application here. Lorem ipsum dolor sit amet, consect
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] Proper use of Markdown
-- [ ] A concise and compelling elevator pitch
-- [ ] Description of key features
-- [ ] Description of how you will use each technology
-- [ ] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
+- [x] Proper use of Markdown
+- [x] A concise and compelling elevator pitch
+- [x] Description of key features
+- [x] Description of how you will use each technology
+- [x] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
 
 ### Elevator pitch
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Ever feel overwhelmed trying to fit homework, chores, work, and personal time into your busy week? Smart Weekly Scheduler takes the stress out of planning. Simply add your tasks, lock in fixed commitments like classes or meetings, and let the app automatically generate an optimized schedule that respects your priorities and daily hour limits. With intelligent task distribution powered by AI-assisted time estimates, you'll spend less time planning and more time doing. Whether you're a student juggling coursework or a professional balancing multiple responsibilities, Smart Weekly Scheduler helps you make the most of every hour.
 
 ### Design
 
-![Design image](placeholder.png)
+![Login page](login.png)
+![Dashboard](dashboard.png)
+![Add task form](add-task.png)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The application consists of two main views. The **Login page** features a centered card with email and password fields against a soft lavender gradient background, with options to register for new users. The **Dashboard** displays a weekly calendar grid (Sunday–Saturday) with hourly time slots as the main content area. A left sidebar contains the "+ Add Task" button which expands to reveal a task form with fields for title, category (dropdown with options like Homework), and estimated hours. The header shows the current week's date range, a settings icon, and the logged-in user's email. A "Regenerate Schedule" button triggers the scheduling algorithm to optimize task placement across the week.
 
 ```mermaid
 sequenceDiagram
-    actor You
-    actor Website
-    You->>Website: Replace this with your design
+    actor User
+    participant Browser
+    participant Server
+    participant AI API
+    participant Database
+    
+    User->>Browser: Add new task
+    Browser->>Server: POST /api/tasks
+    Server->>Database: Store task
+    Server->>AI API: Get time estimate
+    AI API-->>Server: Return estimate
+    Server->>Server: Run scheduling algorithm
+    Server-->>Browser: WebSocket: "Calculating..."
+    Server-->>Browser: WebSocket: "Complete!"
+    Browser->>User: Display updated schedule
 ```
 
 ### Key features
 
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
+- Mark tasks as immutable (fixed time) or flexible for automatic scheduling
+- Category-based priority system (homework, chores, work, personal) for intelligent task ordering
+- Automatic distribution of flexible tasks around fixed commitments
+- Set daily hour capacity limits to prevent overloading
+- AI-powered time estimates and scheduling optimization suggestions
+- Real-time schedule regeneration with live progress feedback
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
-- **CSS** - Description here
-- **React** - Description here
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
+- **HTML** - Two main pages: Login/Register and Dashboard. Semantic structure with forms for task input (title, category, hours, fixed/flexible toggle) and a weekly schedule grid display.
+- **CSS** - Responsive weekly calendar grid showing 7 days with time blocks. Color-coded task categories, clean styling with good whitespace and contrast, and simple animations for schedule updates.
+- **React** - Components for LoginForm, WeeklyCalendar, TaskList, TaskForm, and PreferencesPanel. React Router for Login → Dashboard navigation. State management for reactive schedule regeneration when tasks are added or modified.
+- **Service** - Backend endpoints for task CRUD operations, schedule generation algorithm, user preferences, and authentication. Calls OpenAI/Anthropic API for intelligent task time estimates and schedule optimization suggestions.
+- **DB/Login** - Store user credentials with hashed passwords, tasks (title, category, hours, immutable flag, time slot), and preferences (category priorities, daily limits). Secure authentication with registration, login, and logout functionality.
+- **WebSocket** - Real-time feedback during schedule regeneration ("Calculating schedule..." → "Complete!"). Push notifications when schedule finishes regenerating after adding or editing tasks. Live progress indicator during optimization.
 
 ## 🚀 AWS deliverable
 

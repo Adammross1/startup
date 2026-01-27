@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Weekly Scheduler - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+    <header id="app-header">
+        <div id="heading">
+            <h1>Smart Weekly Scheduler</h1>
+            <h4 id="week-range">Jan 11 - Jan 17</h4>
+        </div>
+
+        <nav id="header-nav">
+            <button id="settings-button" type="button" aria-label="Settings">
+                <span class="material-symbols-outlined">
+                    settings
+                </span>
+            </button>
+
+            <section id="user-profile">
+                <span id="user-avatar">A</span>
+                
+                <button id="user-dropdown-toggle" type="button">
+                    <span id="user-email">adam@gmail.com</span>
+                    <span class="material-symbols-outlined">
+                        arrow_drop_down
+                    </span>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <ul id="user-dropdown-menu" style="display: none;">
+                    <li><a href="#" id="profile-link">Profile</a></li>
+                    <li><a href="#" id="preferences-link">Preferences</a></li>
+                    <li><a href="index.html" id="logout-link">Logout</a></li>
+                </ul>
+            </section>
+        </nav>
+    </header>
+    <div id="app-container">
+        <aside id="sidebar">
+            <button id="add-task-button" type="button">
+                <span class="material-symbols-outlined">
+                    add
+                </span>
+                Add Task
+            </button>
+
+            <form id="add-task-form" style="display: none;">
+                <fieldset>
+                    <div>
+                        <label for="task-title">Task Title</label>
+                        <input 
+                            type="text" 
+                            id="task-title" 
+                            name="title" 
+                            placeholder="Enter task title" 
+                            required
+                        >
+                    </div>
+
+                    <div>
+                        <label for="task-category">Category</label>
+                        <select id="task-category" name="category" required>
+                            <option value="homework">Homework</option>
+                            <option value="work">Work</option>
+                            <option value="personal">Personal</option>
+                            <option value="exercise">Exercise</option>
+                            <option value="errands">Errands</option>
+                            <option value="social">Social</option>
+                            <option value="commute">Commute</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="task-hours">Estimated Hours</label>
+                        <input 
+                            type="number" 
+                            id="task-hours" 
+                            name="estimatedHours" 
+                            min="0.5" 
+                            max="24" 
+                            step="0.5" 
+                            value="1" 
+                            required
+                        >
+                    </div>
+
+                    <div>
+                        <label for="task-due-date">Due Date (optional)</label>
+                        <input 
+                            type="date" 
+                            id="task-due-date" 
+                            name="dueDate"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="task-priority">Priority</label>
+                        <select id="task-priority" name="priority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+
+                    <div id="form-actions">
+                        <button type="submit" id="add-task-submit">Add</button>
+                        <button type="button" id="add-task-cancel">Cancel</button>
+                    </div>
+                </fieldset>
+            </form>
+
+            <!-- This is where the data from the databbase will be displayed  -->
+            <section id="task-list">
+                <h2>Your Tasks</h2>
+
+                <p id="no-tasks-message">
+                    No tasks yet. Click "Add Task" to get started.
+                </p>
+
+                <ul id="tasks-container">
+                    <!-- dummy data for now -->
+                    <li class="task-item" data-task-id="123" data-category="homework">
+                        <div class="task-info">
+                            <span class="task-category-badge">Homework</span>
+                            <h3 class="task-name">Web Dev 260 hw</h3>
+                            <p class="task-meta">2 hours • Due: Feb 1</p>
+                        </div>
+                        <div class="task-actions">
+                            <button type="button" class="edit-task-btn" aria-label="Edit task">
+                                <span class="material-symbols-outlined">
+                                    edit
+                                </span>
+                            </button>
+                            <button type="button" class="delete-task-btn" aria-label="Delete task">
+                                <span class="material-symbols-outlined">
+                                    delete
+                                </span>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Websocket will show live activity feed here -->
+            <section id="live-activity">
+                <h2>Live Activity</h2>
+                <p id="connection-status">
+                    <span id="status-indicator">●</span>
+                    <span id="status-text">Connected</span>
+                </p>
+                
+                <ul id="activity-feed">
+                    <!-- dummy data for now -->
+                    <li class="activity-item">
+                        <span class="activity-user">Adam</span>
+                        <span class="activity-action">scheduled "Homework"</span>
+                        <span class="activity-time">2 min ago</span>
+                    </li>
+                    <li class="activity-item">
+                        <span class="activity-user">Kayla</span>
+                        <span class="activity-action">completed "Journaling"</span>
+                        <span class="activity-time">5 min ago</span>
+                    </li>
+                    <li id="no-activity-message">No recent activity</li>
+                </ul>
+            </section>
+        </aside>
+
+        <main id="main-content">
+            <header id="schedule-header">
+                <h2>Weekly Schedule</h2>
+                <button id="regenerate-schedule-btn" type="button">
+                    Regenerate Schedule
+                </button>
+            </header>
+
+            <section id="schedule-container">
+                <table id="schedule-grid">
+                    <thead>
+                        <tr>
+                            <th id="time-column-header">Time</th>
+                            <th>Sunday</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Saturday</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body">
+                        <tr data-hour="0">
+                            <td class="time-cell">00:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="1">
+                            <td class="time-cell">01:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="2">
+                            <td class="time-cell">02:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="3">
+                            <td class="time-cell">03:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="4">
+                            <td class="time-cell">04:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="5">
+                            <td class="time-cell">05:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="6">
+                            <td class="time-cell">06:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="7">
+                            <td class="time-cell">07:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="8">
+                            <td class="time-cell">08:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="9">
+                            <td class="time-cell">09:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="10">
+                            <td class="time-cell">10:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="11">
+                            <td class="time-cell">11:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="12">
+                            <td class="time-cell">12:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="13">
+                            <td class="time-cell">13:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="14">
+                            <td class="time-cell">14:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="15">
+                            <td class="time-cell">15:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="16">
+                            <td class="time-cell">16:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="17">
+                            <td class="time-cell">17:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="18">
+                            <td class="time-cell">18:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="19">
+                            <td class="time-cell">19:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="20">
+                            <td class="time-cell">20:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="21">
+                            <td class="time-cell">21:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="22">
+                            <td class="time-cell">22:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                        <tr data-hour="23">
+                            <td class="time-cell">23:00</td>
+                            <td class="day-cell" data-day="0"></td>
+                            <td class="day-cell" data-day="1"></td>
+                            <td class="day-cell" data-day="2"></td>
+                            <td class="day-cell" data-day="3"></td>
+                            <td class="day-cell" data-day="4"></td>
+                            <td class="day-cell" data-day="5"></td>
+                            <td class="day-cell" data-day="6"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- example task -->
+            <div class="scheduled-task" data-task-id="" data-category="">
+                <span class="task-block-title">Task Name</span>
+                <span class="task-block-time">09:00 - 11:00</span>
+            </div>
+        </main>
+    </div>
+
+    <footer id="app-footer">
+        <p>
+            <a href="about.html">About</a> |
+            <a href="https://github.com/Adammross1/startup" target="_blank">GitHub</a>
+        </p>
+        <p>&copy; 2026 Smart Weekly Scheduler</p>
+    </footer>
+
+    <!-- JavaScript placeholder -->
+    <script src="dashboard.js"></script>
+</body>
+</html>
+

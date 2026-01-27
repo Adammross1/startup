@@ -19,9 +19,15 @@ No problems worked just like it said in the [instruction](https://github.com/web
 
 ## HTML
 
-This was easy. I was careful to use the correct structural elements such as header, footer, main, nav, and form. The links between the three views work great using the `a` element.
+Key HTML concepts used in my startup:
 
-The part I didn't like was the duplication of the header and footer code. This is messy, but it will get cleaned up when I get to React.
+**Semantic Elements** - Used `<aside>` for sidebar, `<section>` for grouped content, `<article>` for self-contained content. This makes the HTML more readable and accessible.
+
+**Dialog Element** - `<dialog>` is perfect for modals. Much cleaner than divs with display:none. Use `method="dialog"` on forms inside dialogs.
+
+**Form Structure** - `<fieldset>` and `<legend>` group related inputs. Makes forms more semantic and accessible.
+
+**Accessibility** - Every `<input>` needs a `<label>`. Icon-only buttons need `aria-label`. The `required` attribute helps with validation.
 
 ## CSS
 

@@ -78,21 +78,21 @@ I am going to use the required technologies in the following ways.
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Server deployed and accessible with custom domain name** - [My server link](https://yourdomainnamehere.click).
+- [X] **Server deployed and accessible with custom domain name** - [My server link](https://mentalloadbearer.me).
 
 ## 🚀 HTML deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **HTML pages** - I did not complete this part of the deliverable.
-- [ ] **Proper HTML element usage** - I did not complete this part of the deliverable.
-- [ ] **Links** - I did not complete this part of the deliverable.
-- [ ] **Text** - I did not complete this part of the deliverable.
-- [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
-- [ ] **Images** - I did not complete this part of the deliverable.
-- [ ] **Login placeholder** - I did not complete this part of the deliverable.
-- [ ] **DB data placeholder** - I did not complete this part of the deliverable.
-- [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [X] **HTML pages** - Three HTML pages: index.html (login), dashboard.html (main app), and about.html.
+- [X] **Proper HTML element usage** - Used semantic elements like header, nav, aside, main, section, and dialog for modals.
+- [X] **Links** - Navigation links between pages in nav.
+- [X] **Text** - Task titles, descriptions, time labels, and user activity feed text content.
+- [X] **3rd party API placeholder** - Google Calendar API placeholder in dashboard.js for syncing weekly events to Google calendar.
+- [X] **Images** - Logo image (mlb-logo.jpg) displayed in the header navbar.
+- [X] **Login placeholder** - Login form on index.html with email and password inputs.
+- [X] **DB data placeholder** - Task list section shows dummy tasks that will come from database.
+- [X] **WebSocket placeholder** - Live activity feed section shows real-time user activity placeholder.
 
 ## 🚀 CSS deliverable
 

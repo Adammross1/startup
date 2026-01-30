@@ -1,6 +1,6 @@
 # CS 260 Notes
 
-[My startup - Simon](https://simon.cs260.click)
+[My startup - Simon](https://mentalloadbearer.me/)
 
 ## Helpful links
 
@@ -10,12 +10,12 @@
 
 ## AWS
 
-My IP address is: 54.81.96.130
-Launching my AMI I initially put it on a private subnet. Even though it had a public IP address and the security group was right, I wasn't able to connect to it.
+My IP address is: 54.235.144.190
+There was a big roadblock initally with AWS needing to verify my account before I could register a domain using Route53, so I registered a domain with namecheap.com instead. There was helpful documentation to get that namecheap domain connected to my ec2 instance in AWS so that went very smoothly. 
 
 ## Caddy
 
-No problems worked just like it said in the [instruction](https://github.com/webprogramming260/.github/blob/main/profile/webServers/https/https.md).
+No problems worked just like it said in the [instruction](https://github.com/webprogramming260/.github/blob/main/profile/webServers/https/https.md). I know this is the default note but this was my experience. It was very nice to already have this set up and easily configurable. I'm not a huge fan of vim so I edited the Caddyfile using nano instead. Just personal preference.
 
 ## HTML
 

@@ -1,0 +1,61 @@
+
+body {
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-gradient-start) 0%,
+    var(--color-bg-gradient-end) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--spacing-xl);
+}
+
+#login-card {
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--spacing-4xl);
+  max-width: 28rem;
+  width: 100%;
+}
+
+#login-card header {
+  text-align: center;
+  margin-bottom: var(--spacing-3xl);
+}
+
+#login-card header h1 {
+  color: var(--color-primary);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-sm);
+}
+
+#login-card header p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+}
+
+#login-card footer {
+  text-align: center;
+  margin-top: var(--spacing-2xl);
+}
+
+#login-card footer p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+#login-card footer a {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+}
+
+#login-card footer a:hover {
+  text-decoration: underline;
+}
+

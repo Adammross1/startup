@@ -1,0 +1,111 @@
+#app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+#heading {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+#heading img {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-md);
+}
+
+#heading h1 {
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+}
+
+#heading h4 {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+}
+
+#header-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xl);
+}
+
+#header-nav a {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+#settings-button {
+  color: var(--color-text-secondary);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-full);
+}
+
+#settings-button:hover {
+  background: var(--color-gray-100);
+}
+
+#user-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  position: relative;
+}
+
+#user-avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-semibold);
+}
+
+#user-dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+#user-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--spacing-sm);
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 10rem;
+}
+
+#user-dropdown-menu li {
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+#user-dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+#user-dropdown-menu a {
+  display: block;
+  padding: var(--spacing-md) var(--spacing-lg);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+#user-dropdown-menu a:hover {
+  background: var(--color-gray-50);
+}
+

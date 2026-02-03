@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Weekly Scheduler - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="dashboard.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
@@ -45,7 +46,7 @@
     </header>
     <div id="app-container">
         <aside id="sidebar">
-            <button id="add-task-button" type="button">
+            <button id="add-task-button" type="button" class="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all active:scale-95">
                 <span class="material-symbols-outlined">
                     add
                 </span>
@@ -177,8 +178,8 @@
 
         <main id="main-content">
             <header id="schedule-header">
-                <h2>Weekly Schedule</h2>
-                <button id="regenerate-schedule-btn" type="button">
+                <h2 class="text-2xl font-semibold text-gray-800">Weekly Schedule</h2>
+                <button id="regenerate-schedule-btn" type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all active:scale-95">
                     Regenerate Schedule
                 </button>
             </header>

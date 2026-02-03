@@ -99,11 +99,11 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
 - [X] **Visually appealing colors and layout. No overflowing elements.** - Created a comprehensive design system with CSS variables for colors, spacing, typography, and shadows. Implemented gradient backgrounds, proper spacing throughout, and ensured no content overflow with responsive layouts.
-- [ ] **Use of a CSS framework** - I did not use a CSS framework. All styles are custom-written CSS organized into modular files (styles.css, login.css, dashboard.css, about.css).
-- [X] **All visual elements styled using CSS** - Styled all elements including login page, dashboard header, sidebar, calendar grid, task items, modals, forms, buttons, and footer. Added hover states, focus indicators, and transitions throughout.
-- [X] **Responsive to window resizing using flexbox and/or grid display** - Used flexbox extensively for layouts (header, sidebar, forms, button groups). Implemented media queries for tablet (< 1024px), mobile (< 768px), and small mobile (< 480px) breakpoints with adaptive layouts.
+- [X] **Use of a CSS framework** - Integrated Tailwind CSS utility classes throughout the application for rapid styling. Used Tailwind for form inputs, buttons, spacing utilities, flexbox layouts, and responsive design alongside custom CSS for specialized components.
+- [X] **All visual elements styled using CSS** - Styled all elements including login page, dashboard header, sidebar, calendar grid, task items, modals, forms, buttons, and footer. Added hover states, focus indicators, and transitions throughout using both Tailwind utilities and custom CSS.
+- [X] **Responsive to window resizing using flexbox and/or grid display** - Used Tailwind flexbox utilities and custom flexbox for layouts (header, sidebar, forms, button groups). Implemented media queries for tablet (< 1024px), mobile (< 768px), and small mobile (< 480px) breakpoints with adaptive layouts.
 - [X] **Use of a imported font** - Imported Google Fonts "Inter" (weights 300-700) for clean, modern typography throughout the application.
-- [X] **Use of different types of selectors including element, class, ID, and pseudo selectors** - Used element selectors (body, button, input), class selectors (.task-item, .button-group), ID selectors (#login-card, #app-header), and pseudo selectors (:hover, :focus, :active, ::placeholder, ::backdrop, :nth-child).
+- [X] **Use of different types of selectors including element, class, ID, and pseudo selectors** - Used element selectors (body, button, input), class selectors (.task-item, .button-group, Tailwind utilities), ID selectors (#login-card, #app-header), and pseudo selectors (:hover, :focus, :active, ::placeholder, ::backdrop, :nth-child).
 
 ## 🚀 React part 1: Routing deliverable
 

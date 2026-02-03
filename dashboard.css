@@ -244,22 +244,22 @@
 }
 
 .task-homework .task-category-badge {
-  background: rgba(139, 122, 255, 0.15);
+  background: var(--color-homework-bg);
   color: var(--color-homework);
 }
 
 .task-work .task-category-badge {
-  background: rgba(88, 86, 214, 0.15);
+  background: var(--color-work-bg);
   color: var(--color-work);
 }
 
 .task-personal .task-category-badge {
-  background: rgba(52, 199, 89, 0.15);
+  background: var(--color-personal-bg);
   color: var(--color-personal);
 }
 
 .task-exercise .task-category-badge {
-  background: rgba(255, 149, 0, 0.15);
+  background: var(--color-exercise-bg);
   color: var(--color-exercise);
 }
 
@@ -374,4 +374,74 @@
 
 #schedule-grid tbody tr:nth-child(even) .day-cell:hover {
   background: rgba(88, 86, 214, 0.08);
+}
+
+.scheduled-task {
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid;
+  margin-bottom: var(--spacing-xs);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.scheduled-task:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.task-block-title {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-block-time {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.scheduled-task.task-homework {
+  background: var(--color-homework-bg);
+  border-left-color: var(--color-homework);
+}
+
+.scheduled-task.task-work {
+  background: var(--color-work-bg);
+  border-left-color: var(--color-work);
+}
+
+.scheduled-task.task-personal {
+  background: var(--color-personal-bg);
+  border-left-color: var(--color-personal);
+}
+
+.scheduled-task.task-exercise {
+  background: var(--color-exercise-bg);
+  border-left-color: var(--color-exercise);
+}
+
+.scheduled-task.task-errands {
+  background: var(--color-errands-bg);
+  border-left-color: var(--color-errands);
+}
+
+.scheduled-task.task-social {
+  background: var(--color-social-bg);
+  border-left-color: var(--color-social);
+}
+
+.scheduled-task.task-commute {
+  background: var(--color-commute-bg);
+  border-left-color: var(--color-commute);
+}
+
+.scheduled-task.task-other {
+  background: var(--color-other-bg);
+  border-left-color: var(--color-other);
 }

@@ -358,10 +358,11 @@
 
 .day-cell {
   border: 1px solid var(--color-gray-200);
-  min-height: 3rem;
+  height: 3rem;
   padding: var(--spacing-xs);
   transition: background var(--transition-fast);
   position: relative;
+  vertical-align: top;
 }
 
 .day-cell:hover {
@@ -377,12 +378,17 @@
 }
 
 .scheduled-task {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6rem;
   padding: var(--spacing-sm);
   border-radius: var(--radius-sm);
   border-left: 4px solid;
-  margin-bottom: var(--spacing-xs);
   cursor: pointer;
   transition: all var(--transition-base);
+  z-index: 1;
 }
 
 .scheduled-task:hover {

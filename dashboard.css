@@ -39,6 +39,8 @@
 #header-nav a {
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
+  display: flex;
+  align-items: center;
 }
 
 #settings-button {
@@ -765,4 +767,70 @@ dialog input:focus, dialog select:focus {
   .button-group button {
     padding: var(--spacing-sm) var(--spacing-md);
   }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+#status-indicator {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.activity-item {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.task-item {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.scheduled-task:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+#add-task-button:active,
+#regenerate-schedule-btn:active,
+.button-group button:active {
+  transform: scale(0.98);
+}
+
+dialog[open] {
+  animation: fadeIn 0.2s ease-out;
+}
+
+#add-task-form {
+  animation: fadeIn 0.3s ease-out;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+button, a, input, select {
+  -webkit-tap-highlight-color: transparent;
+  min-height: 2.75rem;
+  touch-action: manipulation;
 }

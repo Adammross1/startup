@@ -128,3 +128,31 @@ body {
     font-size: var(--font-size-2xl);
   }
 }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#login-card {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+#login-card button:active {
+  transform: scale(0.98);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

@@ -34,13 +34,21 @@
   
   /* Category Colors */
   --color-homework: #8B7AFF;
+  --color-homework-bg: rgba(139, 122, 255, 0.15);
   --color-work: #5856D6;
+  --color-work-bg: rgba(88, 86, 214, 0.15);
   --color-personal: #34C759;
+  --color-personal-bg: rgba(52, 199, 89, 0.15);
   --color-exercise: #FF9500;
+  --color-exercise-bg: rgba(255, 149, 0, 0.15);
   --color-errands: #FFD60A;
+  --color-errands-bg: rgba(255, 214, 10, 0.15);
   --color-social: #FF375F;
+  --color-social-bg: rgba(255, 55, 95, 0.15);
   --color-commute: #5AC8FA;
+  --color-commute-bg: rgba(90, 200, 250, 0.15);
   --color-other: #8E8E93;
+  --color-other-bg: rgba(142, 142, 147, 0.15);
   
   /* Status Colors */
   --color-success: #34C759;
@@ -60,7 +68,7 @@
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
-  --radius-full: 50%;  
+  --radius-full: 100%;  
   
   /* Spacing */
   --spacing-xs: 0.25rem;

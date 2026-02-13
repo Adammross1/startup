@@ -11,7 +11,7 @@ export default function App() {
     <BrowserRouter>
         <header id="app-header">
           <div id="heading">
-              <img src="assets/mlb-logo.jpg" alt="Smart Weekly Scheduler Logo" width="40" height="40" />
+              <img src="/mlb-logo.jpg" alt="Smart Weekly Scheduler Logo" width="40" height="40" />
               <h1>Smart Weekly Scheduler</h1>
               <h4 id="week-range">Jan 11 - Jan 17</h4>
           </div>
@@ -39,9 +39,9 @@ export default function App() {
                   </button>
 
                   <ul id="user-dropdown-menu" style={{ display: 'none' }}>
-                      <li><a href="#" id="profile-link">Profile</a></li>
-                      <li><a href="#" id="preferences-link">Preferences</a></li>
-                      <li><a href="index.html" id="logout-link">Logout</a></li>
+                      <li><button id="profile-link">Profile</button></li>
+                      <li><button id="preferences-link">Preferences</button></li>
+                      <li><NavLink to="/" id="logout-link">Logout</NavLink></li>
                   </ul>
               </section>
           </nav>

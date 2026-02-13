@@ -1,0 +1,100 @@
+@import '../../styles.css';
+
+#about-content {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: var(--spacing-4xl) var(--spacing-2xl);
+  background: var(--color-gray-50);
+  min-height: calc(100vh - 10rem);
+}
+
+#about-content article {
+  background: var(--color-white);
+  padding: var(--spacing-4xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+#about-content h2 {
+  color: var(--color-primary);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-3xl);
+  line-height: var(--line-height-tight);
+}
+
+#about-content h3 {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-lg);
+  margin-top: var(--spacing-4xl);
+}
+
+#about-content section:first-of-type h3 {
+  margin-top: 0;
+}
+
+#about-content p {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--spacing-xl);
+  font-size: var(--font-size-base);
+}
+
+#about-content ul {
+  list-style: none;
+  margin-bottom: var(--spacing-3xl);
+}
+
+#about-content ul li {
+  color: var(--color-text-primary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--spacing-md);
+  padding-left: var(--spacing-2xl);
+  position: relative;
+  font-size: var(--font-size-base);
+}
+
+#about-content ul li::before {
+  content: "•";
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xl);
+  position: absolute;
+  left: 0;
+  top: -2px;
+}
+
+#about-content strong,
+#about-content b {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+#about-content section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+#about-content section:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  #about-content {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+
+  #about-content article {
+    padding: var(--spacing-2xl);
+  }
+
+  #about-content h2 {
+    font-size: var(--font-size-2xl);
+  }
+
+  #about-content h3 {
+    font-size: var(--font-size-lg);
+    margin-top: var(--spacing-3xl);
+  }
+}

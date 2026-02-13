@@ -9,7 +9,17 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: var(--spacing-xl);
+}
+
+#login-card-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
 
 #login-card {

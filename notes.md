@@ -35,7 +35,7 @@ This was a pretty easy assignment for me because I am already very proficient in
 
 ## React Part 1: Routing
 
-Setting up Vite and React was pretty simple. I had a bit of trouble because of conflicting CSS. This isn't as straight forward as you would find with Svelte or Vue, but I made it work in the end. If there was a ton of CSS it would be a real problem. It sure was nice to have the code structured in a more usable way.
+Setting up Vite with React was straightforward I just needed to make sure index.jsx was the entry point. The syntax changes like `class` to `className` were very straightforward. I created a Layout component using React Router's `<Outlet />` to conditionally show header/footer. That wasn't in the assignment instructions but something I was already familiar with. Login page renders standalone while Dashboard and About pages render inside the Layout. I had some issues with CSS bleeding between pages. The login page gradient was showing everywhere, so I ended up needing to put width: 100% on the root div just inside the body tag.
 
 ## React Part 2: Reactivity
 

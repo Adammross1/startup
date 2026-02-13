@@ -109,9 +109,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Bundled using Vite** - I did not complete this part of the deliverable.
-- [ ] **Components** - I did not complete this part of the deliverable.
-- [ ] **Router** - I did not complete this part of the deliverable.
+- [X] **Bundled using Vite** - Yes I installed necessary packages and updated the scripts in package.json to make sure the app is bundled using vite.
+- [X] **Components** - I made individual components for each page, and also individual components for the different modals in the dashboard page.
+- [X] **Router** - I implemented react routing
 
 ## 🚀 React part 2: Reactivity deliverable
 

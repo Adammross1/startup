@@ -1,0 +1,66 @@
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './app.css';
+import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { Login } from './login/login';
+import { Dashboard } from './dashboard/dashboard';
+import { About } from './about/about';
+
+export default function App() {
+  return (
+    <BrowserRouter>
+        <header id="app-header">
+          <div id="heading">
+              <img src="assets/mlb-logo.jpg" alt="Smart Weekly Scheduler Logo" width="40" height="40" />
+              <h1>Smart Weekly Scheduler</h1>
+              <h4 id="week-range">Jan 11 - Jan 17</h4>
+          </div>
+
+          <nav id="header-nav">
+              <NavLink to="" className="nav-link" >Login</NavLink>
+              <NavLink to="dashboard" className="nav-link" >Dashboard</NavLink>
+              <NavLink to="about" className="nav-link" >About</NavLink>
+              <a href="https://github.com/Adammross1/startup" target="_blank">Adam's Github</a>
+
+              <button id="settings-button" type="button" aria-label="Settings">
+                  <span className="material-symbols-outlined">
+                      settings
+                  </span>
+              </button>
+          
+              <section id="user-profile">
+                  <span id="user-avatar">A</span>
+                  
+                  <button id="user-dropdown-toggle" type="button">
+                      <span id="user-email">adam@gmail.com</span>
+                      <span className="material-symbols-outlined">
+                          arrow_drop_down
+                      </span>
+                  </button>
+
+                  <ul id="user-dropdown-menu" style={{ display: 'none' }}>
+                      <li><a href="#" id="profile-link">Profile</a></li>
+                      <li><a href="#" id="preferences-link">Preferences</a></li>
+                      <li><a href="index.html" id="logout-link">Logout</a></li>
+                  </ul>
+              </section>
+          </nav>
+      </header>
+
+      <Routes>
+        <Route path='/' element={<Login />} exact />
+        <Route path='/about' element={<About />} />
+        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='*' element={<NotFound />} />
+      </Routes>
+
+      <footer id="app-footer">
+        <p>&copy; 2026 Smart Weekly Scheduler</p>
+      </footer>
+    </BrowserRouter>
+  );
+}
+
+function NotFound() {
+  return <main className="container-fluid bg-secondary text-center">404: Return to sender. Address unknown.</main>;
+}

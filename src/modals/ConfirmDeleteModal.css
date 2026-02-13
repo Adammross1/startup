@@ -1,0 +1,98 @@
+@import '../../styles.css';
+
+dialog {
+  max-width: 37rem;
+  width: 90%;
+  padding: var(--spacing-2xl);
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+dialog header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+dialog header h2 {
+  font-size: var(--font-size-2xl);
+}
+
+dialog p {
+  margin-bottom: var(--spacing-xl);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+.button-group {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.button-group button {
+  flex: 1;
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+#confirm-delete-yes {
+  background: var(--color-error);
+  color: var(--color-white);
+}
+
+#confirm-delete-yes:hover {
+  background: #E63629;
+}
+
+#confirm-delete-no {
+  background: var(--color-gray-200);
+  color: var(--color-text-primary);
+}
+
+#confirm-delete-no:hover {
+  background: var(--color-gray-300);
+}
+
+dialog[open] {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  dialog {
+    width: 95%;
+    padding: var(--spacing-xl);
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  dialog {
+    padding: var(--spacing-lg);
+  }
+
+  .button-group button {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}

@@ -14,8 +14,9 @@ function formatDueDate(dueDate) {
 }
 
 export function Dashboard() {
-  const { tasks, addTask } = useTasks();
+  const { tasks, addTask, updateTask } = useTasks();
 
+  const [editingTask, setEditingTask] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState(EMPTY_FORM);
 
@@ -34,6 +35,11 @@ export function Dashboard() {
   function handleCancel() {
     setFormData(EMPTY_FORM);
     setShowAddForm(false);
+  }
+
+  function handleSaveEdit(id, updates) {
+    updateTask(id, updates);
+    setEditingTask(null);
   }
 
   return (
@@ -143,7 +149,7 @@ export function Dashboard() {
                           </p>
                         </div>
                         <div className="task-actions">
-                          <button type="button" className="edit-task-btn" aria-label="Edit task">
+                          <button type="button" className="edit-task-btn" aria-label="Edit task" onClick={() => setEditingTask(task)}>
                             <span className="material-symbols-outlined">edit</span>
                           </button>
                           <button type="button" className="delete-task-btn" aria-label="Delete task">
@@ -456,7 +462,12 @@ export function Dashboard() {
     </div>
 
     <SettingsModal />
-    <EditTaskModal />
+    <EditTaskModal
+      task={editingTask}
+      onSave={handleSaveEdit}
+      onDelete={(id) => setEditingTask(null)}
+      onClose={() => setEditingTask(null)}
+    />
     <ConfirmDeleteModal />
     </>
   );

@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { getCurrentWeekRange } from './utils/dateUtils';
 
 export function Layout() {
+  const [weekLabel, setWeekLabel] = useState('');
+
+  useEffect(() => {
+    const { label } = getCurrentWeekRange();
+    setWeekLabel(label);
+  }, []);
+
   return (
     <>
       <header id="app-header">
         <div id="heading">
             <img src="/mlb-logo.jpg" alt="Smart Weekly Scheduler Logo" width="40" height="40" />
             <h1>Smart Weekly Scheduler</h1>
-            <h4 id="week-range">Jan 11 - Jan 17</h4>
+            <h4 id="week-range">{weekLabel}</h4>
         </div>
 
         <nav id="header-nav">

@@ -7,8 +7,14 @@ import { useTasks } from '../context/TaskContext';
 
 const EMPTY_FORM = { title: '', category: 'homework', estimatedHours: 1, dueDate: '', priority: 'low' };
 
+function formatDueDate(dueDate) {
+  if (!dueDate) return null;
+  const date = new Date(dueDate + 'T00:00:00');
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
 export function Dashboard() {
-  const { addTask } = useTasks();
+  const { tasks, addTask } = useTasks();
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState(EMPTY_FORM);
@@ -119,36 +125,35 @@ export function Dashboard() {
               </form>
             )}
 
-            {/* This is where the data from the databbase will be displayed */}
             <section id="task-list">
                 <h2>Your Tasks</h2>
 
-                <p id="no-tasks-message">
-                    No tasks yet. Click &quot;Add Task&quot; to get started.
-                </p>
-
-                <ul id="tasks-container">
-                    {/* dummy data for now */}
-                    <li className="task-item task-homework" data-task-id="123" data-category="homework">
+                {tasks.length === 0 ? (
+                  <p id="no-tasks-message">No tasks yet. Click &quot;Add Task&quot; to get started.</p>
+                ) : (
+                  <ul id="tasks-container">
+                    {tasks.map((task) => (
+                      <li key={task.id} className={`task-item task-${task.category}`}>
                         <div className="task-info">
-                            <span className="task-category-badge">Homework</span>
-                            <h3 className="task-name">Web Dev 260 hw</h3>
-                            <p className="task-meta">2 hours • Due: Feb 1</p>
+                          <span className="task-category-badge">{task.category.charAt(0).toUpperCase() + task.category.slice(1)}</span>
+                          <h3 className="task-name">{task.title}</h3>
+                          <p className="task-meta">
+                            {task.estimatedHours} {task.estimatedHours === 1 ? 'hour' : 'hours'}
+                            {formatDueDate(task.dueDate) && ` • Due: ${formatDueDate(task.dueDate)}`}
+                          </p>
                         </div>
                         <div className="task-actions">
-                            <button type="button" className="edit-task-btn" aria-label="Edit task">
-                                <span className="material-symbols-outlined">
-                                    edit
-                                </span>
-                            </button>
-                            <button type="button" className="delete-task-btn" aria-label="Delete task">
-                                <span className="material-symbols-outlined">
-                                    delete
-                                </span>
-                            </button>
+                          <button type="button" className="edit-task-btn" aria-label="Edit task">
+                            <span className="material-symbols-outlined">edit</span>
+                          </button>
+                          <button type="button" className="delete-task-btn" aria-label="Delete task">
+                            <span className="material-symbols-outlined">delete</span>
+                          </button>
                         </div>
-                    </li>
-                </ul>
+                      </li>
+                    ))}
+                  </ul>
+                )}
             </section>
 
             {/* Websocket will show live activity feed here */}

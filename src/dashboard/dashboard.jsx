@@ -1,37 +1,70 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './dashboard.css';
 import { SettingsModal } from '../modals/SettingsModal';
 import { EditTaskModal } from '../modals/EditTaskModal';
 import { ConfirmDeleteModal } from '../modals/ConfirmDeleteModal';
+import { useTasks } from '../context/TaskContext';
+
+const EMPTY_FORM = { title: '', category: 'homework', estimatedHours: 1, dueDate: '', priority: 'low' };
 
 export function Dashboard() {
+  const { addTask } = useTasks();
+
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [formData, setFormData] = useState(EMPTY_FORM);
+
+  function handleFieldChange(e) {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  }
+
+  function handleAddTask(e) {
+    e.preventDefault();
+    addTask(formData);
+    setFormData(EMPTY_FORM);
+    setShowAddForm(false);
+  }
+
+  function handleCancel() {
+    setFormData(EMPTY_FORM);
+    setShowAddForm(false);
+  }
+
   return (
     <>
     <div id="app-container">
         <aside id="sidebar">
-            <button id="add-task-button" type="button" className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all active:scale-95">
-                <span className="material-symbols-outlined">
-                    add
-                </span>
+            {!showAddForm && (
+              <button
+                id="add-task-button"
+                type="button"
+                className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all active:scale-95"
+                onClick={() => setShowAddForm(true)}
+              >
+                <span className="material-symbols-outlined">add</span>
                 Add Task
-            </button>
+              </button>
+            )}
 
-            <form id="add-task-form" style={{display: 'none'}}>
+            {showAddForm && (
+              <form id="add-task-form" onSubmit={handleAddTask}>
                 <fieldset>
                     <div>
                         <label htmlFor="task-title">Task Title</label>
-                        <input 
-                            type="text" 
-                            id="task-title" 
-                            name="title" 
-                            placeholder="Enter task title" 
+                        <input
+                            type="text"
+                            id="task-title"
+                            name="title"
+                            placeholder="Enter task title"
+                            value={formData.title}
+                            onChange={handleFieldChange}
                             required
                         />
                     </div>
 
                     <div>
                         <label htmlFor="task-category">Category</label>
-                        <select id="task-category" name="category" required>
+                        <select id="task-category" name="category" value={formData.category} onChange={handleFieldChange} required>
                             <option value="homework">Homework</option>
                             <option value="work">Work</option>
                             <option value="personal">Personal</option>
@@ -45,30 +78,33 @@ export function Dashboard() {
 
                     <div>
                         <label htmlFor="task-hours">Estimated Hours</label>
-                        <input 
-                            type="number" 
-                            id="task-hours" 
-                            name="estimatedHours" 
-                            min="0.5" 
-                            max="24" 
-                            step="0.5" 
-                            defaultValue="1" 
+                        <input
+                            type="number"
+                            id="task-hours"
+                            name="estimatedHours"
+                            min="0.5"
+                            max="24"
+                            step="0.5"
+                            value={formData.estimatedHours}
+                            onChange={handleFieldChange}
                             required
                         />
                     </div>
 
                     <div>
                         <label htmlFor="task-due-date">Due Date (optional)</label>
-                        <input 
-                            type="date" 
-                            id="task-due-date" 
+                        <input
+                            type="date"
+                            id="task-due-date"
                             name="dueDate"
+                            value={formData.dueDate}
+                            onChange={handleFieldChange}
                         />
                     </div>
 
                     <div>
                         <label htmlFor="task-priority">Priority</label>
-                        <select id="task-priority" name="priority">
+                        <select id="task-priority" name="priority" value={formData.priority} onChange={handleFieldChange}>
                             <option value="low">Low</option>
                             <option value="medium">Medium</option>
                             <option value="high">High</option>
@@ -77,10 +113,11 @@ export function Dashboard() {
 
                     <div id="form-actions">
                         <button type="submit" id="add-task-submit">Add</button>
-                        <button type="button" id="add-task-cancel">Cancel</button>
+                        <button type="button" id="add-task-cancel" onClick={handleCancel}>Cancel</button>
                     </div>
                 </fieldset>
-            </form>
+              </form>
+            )}
 
             {/* This is where the data from the databbase will be displayed */}
             <section id="task-list">

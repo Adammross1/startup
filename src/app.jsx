@@ -8,10 +8,12 @@ import { About } from './about/about';
 import { Layout } from './Layout';
 import { UserProvider } from './context/UserContext';
 import { TaskProvider } from './context/TaskContext';
+import { SettingsProvider } from './context/SettingsContext';
 
 export default function App() {
   return (
     <UserProvider>
+      <SettingsProvider>
       <TaskProvider>
       <BrowserRouter>
         <Routes>
@@ -24,6 +26,7 @@ export default function App() {
         </Routes>
       </BrowserRouter>
       </TaskProvider>
+      </SettingsProvider>
     </UserProvider>
   );
 }

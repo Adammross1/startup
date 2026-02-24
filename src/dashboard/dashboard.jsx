@@ -18,6 +18,7 @@ export function Dashboard() {
 
   const [editingTask, setEditingTask] = useState(null);
   const [deletingTaskId, setDeletingTaskId] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState(EMPTY_FORM);
 
@@ -197,9 +198,14 @@ export function Dashboard() {
         <main id="main-content">
             <header id="schedule-header">
                 <h2 className="text-2xl font-semibold text-gray-800">Weekly Schedule</h2>
-                <button id="regenerate-schedule-btn" type="button" className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all active:scale-95">
-                    Regenerate Schedule
-                </button>
+                <div className="header-actions">
+                  <button id="open-settings-btn" type="button" aria-label="Open settings" onClick={() => setShowSettings(true)}>
+                    <span className="material-symbols-outlined">settings</span>
+                  </button>
+                  <button id="regenerate-schedule-btn" type="button" className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all active:scale-95">
+                      Regenerate Schedule
+                  </button>
+                </div>
             </header>
 
             <section id="schedule-container">
@@ -468,7 +474,7 @@ export function Dashboard() {
         </main>
     </div>
 
-    <SettingsModal />
+    <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
     <EditTaskModal
       task={editingTask}
       onSave={handleSaveEdit}

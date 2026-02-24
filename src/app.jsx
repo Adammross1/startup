@@ -6,19 +6,22 @@ import { Login } from './login/login';
 import { Dashboard } from './dashboard/dashboard';
 import { About } from './about/about';
 import { Layout } from './Layout';
+import { UserProvider } from './context/UserContext';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Login />} />
-        <Route element={<Layout />}>
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/about' element={<About />} />
-          <Route path='*' element={<NotFound />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <UserProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Login />} />
+          <Route element={<Layout />}>
+            <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/about' element={<About />} />
+            <Route path='*' element={<NotFound />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </UserProvider>
   );
 }
 

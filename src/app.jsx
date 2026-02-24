@@ -7,10 +7,12 @@ import { Dashboard } from './dashboard/dashboard';
 import { About } from './about/about';
 import { Layout } from './Layout';
 import { UserProvider } from './context/UserContext';
+import { TaskProvider } from './context/TaskContext';
 
 export default function App() {
   return (
     <UserProvider>
+      <TaskProvider>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Login />} />
@@ -21,6 +23,7 @@ export default function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      </TaskProvider>
     </UserProvider>
   );
 }

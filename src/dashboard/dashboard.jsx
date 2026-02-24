@@ -14,9 +14,10 @@ function formatDueDate(dueDate) {
 }
 
 export function Dashboard() {
-  const { tasks, addTask, updateTask } = useTasks();
+  const { tasks, addTask, updateTask, deleteTask } = useTasks();
 
   const [editingTask, setEditingTask] = useState(null);
+  const [deletingTaskId, setDeletingTaskId] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState(EMPTY_FORM);
 
@@ -39,6 +40,12 @@ export function Dashboard() {
 
   function handleSaveEdit(id, updates) {
     updateTask(id, updates);
+    setEditingTask(null);
+  }
+
+  function handleConfirmDelete() {
+    deleteTask(deletingTaskId);
+    setDeletingTaskId(null);
     setEditingTask(null);
   }
 
@@ -152,7 +159,7 @@ export function Dashboard() {
                           <button type="button" className="edit-task-btn" aria-label="Edit task" onClick={() => setEditingTask(task)}>
                             <span className="material-symbols-outlined">edit</span>
                           </button>
-                          <button type="button" className="delete-task-btn" aria-label="Delete task">
+                          <button type="button" className="delete-task-btn" aria-label="Delete task" onClick={() => setDeletingTaskId(task.id)}>
                             <span className="material-symbols-outlined">delete</span>
                           </button>
                         </div>
@@ -465,10 +472,14 @@ export function Dashboard() {
     <EditTaskModal
       task={editingTask}
       onSave={handleSaveEdit}
-      onDelete={(id) => setEditingTask(null)}
+      onDelete={(id) => { setDeletingTaskId(id); setEditingTask(null); }}
       onClose={() => setEditingTask(null)}
     />
-    <ConfirmDeleteModal />
+    <ConfirmDeleteModal
+      taskId={deletingTaskId}
+      onConfirm={handleConfirmDelete}
+      onCancel={() => setDeletingTaskId(null)}
+    />
     </>
   );
 }

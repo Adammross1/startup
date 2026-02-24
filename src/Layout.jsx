@@ -16,12 +16,6 @@ export function Layout() {
             <NavLink to="/dashboard" className="nav-link">Dashboard</NavLink>
             <NavLink to="/about" className="nav-link">About</NavLink>
             <a href="https://github.com/Adammross1/startup" target="_blank" rel="noopener noreferrer">Adam&apos;s Github</a>
-
-            <button id="settings-button" type="button" aria-label="Settings">
-                <span className="material-symbols-outlined">
-                    settings
-                </span>
-            </button>
         
             <section id="user-profile">
                 <span id="user-avatar">A</span>

@@ -49,16 +49,6 @@
   outline: none;
 }
 
-#settings-button {
-  color: var(--color-text-secondary);
-  padding: var(--spacing-sm);
-  border-radius: var(--radius-full);
-}
-
-#settings-button:hover {
-  background: var(--color-gray-100);
-}
-
 #user-profile {
   display: flex;
   align-items: center;

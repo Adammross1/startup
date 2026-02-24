@@ -308,6 +308,12 @@
   font-size: var(--font-size-2xl);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
 #regenerate-schedule-btn {
   padding: var(--spacing-md) var(--spacing-xl);
   background: var(--color-primary);

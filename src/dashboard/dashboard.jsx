@@ -4,8 +4,17 @@ import { SettingsModal } from '../modals/SettingsModal';
 import { EditTaskModal } from '../modals/EditTaskModal';
 import { ConfirmDeleteModal } from '../modals/ConfirmDeleteModal';
 import { useTasks } from '../context/TaskContext';
+import { useSettings } from '../context/SettingsContext';
 
-const EMPTY_FORM = { title: '', category: 'homework', estimatedHours: 1, dueDate: '', priority: 'low' };
+function createDefaultFormData(settings) {
+  return {
+    title: '',
+    category: settings?.defaultCategory ?? 'homework',
+    estimatedHours: settings?.defaultTaskDuration ?? 1,
+    dueDate: '',
+    priority: settings?.defaultPriority ?? 'low',
+  };
+}
 
 function formatDueDate(dueDate) {
   if (!dueDate) return null;
@@ -15,12 +24,13 @@ function formatDueDate(dueDate) {
 
 export function Dashboard() {
   const { tasks, addTask, updateTask, deleteTask } = useTasks();
+  const { settings } = useSettings();
 
   const [editingTask, setEditingTask] = useState(null);
   const [deletingTaskId, setDeletingTaskId] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [formData, setFormData] = useState(EMPTY_FORM);
+  const [formData, setFormData] = useState(() => createDefaultFormData(settings));
 
   function handleFieldChange(e) {
     const { name, value } = e.target;
@@ -30,12 +40,12 @@ export function Dashboard() {
   function handleAddTask(e) {
     e.preventDefault();
     addTask(formData);
-    setFormData(EMPTY_FORM);
+    setFormData(createDefaultFormData(settings));
     setShowAddForm(false);
   }
 
   function handleCancel() {
-    setFormData(EMPTY_FORM);
+    setFormData(createDefaultFormData(settings));
     setShowAddForm(false);
   }
 
@@ -59,7 +69,7 @@ export function Dashboard() {
                 id="add-task-button"
                 type="button"
                 className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all active:scale-95"
-                onClick={() => setShowAddForm(true)}
+                onClick={() => { setFormData(createDefaultFormData(settings)); setShowAddForm(true); }}
               >
                 <span className="material-symbols-outlined">add</span>
                 Add Task

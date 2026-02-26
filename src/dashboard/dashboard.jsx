@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './dashboard.css';
 import { SettingsModal } from '../modals/SettingsModal';
 import { EditTaskModal } from '../modals/EditTaskModal';
 import { ConfirmDeleteModal } from '../modals/ConfirmDeleteModal';
 import { useTasks } from '../context/TaskContext';
 import { useSettings } from '../context/SettingsContext';
-import { formatHour } from '../utils/dateUtils';
+import { formatSlot, getWeekDates, formatColumnHeader } from '../utils/dateUtils';
+import { generateSchedule } from '../services/schedulerService';
 
 function createDefaultFormData(settings) {
   return {
@@ -26,12 +27,26 @@ function formatDueDate(dueDate) {
 export function Dashboard() {
   const { tasks, addTask, updateTask, deleteTask } = useTasks();
   const { settings } = useSettings();
+  const weekDates = useMemo(() => getWeekDates(), []);
+  const todayMidnight = useMemo(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }, []);
 
   const [editingTask, setEditingTask] = useState(null);
   const [deletingTaskId, setDeletingTaskId] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState(() => createDefaultFormData(settings));
+  const [scheduleBlocks, setScheduleBlocks] = useState([]);
+  const [unplacedTasks, setUnplacedTasks] = useState([]);
+
+  useEffect(() => {
+    const { blocks, unplacedTasks: unplaced } = generateSchedule(tasks, settings, weekDates);
+    setScheduleBlocks(blocks);
+    setUnplacedTasks(unplaced);
+  }, [tasks, settings, weekDates]);
 
   function handleFieldChange(e) {
     const { name, value } = e.target;
@@ -59,6 +74,21 @@ export function Dashboard() {
     deleteTask(deletingTaskId);
     setDeletingTaskId(null);
     setEditingTask(null);
+  }
+
+  function handleRegenerate() {
+    const { blocks, unplacedTasks: unplaced } = generateSchedule(tasks, settings, weekDates);
+    setScheduleBlocks(blocks);
+    setUnplacedTasks(unplaced);
+  }
+
+  const scheduleBlocksByStartCell = {};
+  const coveredCells = new Set();
+  for (const block of scheduleBlocks) {
+    scheduleBlocksByStartCell[`${block.day}-${block.startSlot}`] = block;
+    for (let slot = block.startSlot + 1; slot < block.endSlot; slot++) {
+      coveredCells.add(`${block.day}-${slot}`);
+    }
   }
 
   return (
@@ -213,33 +243,62 @@ export function Dashboard() {
                   <button id="open-settings-btn" type="button" aria-label="Open settings" onClick={() => setShowSettings(true)}>
                     <span className="material-symbols-outlined">settings</span>
                   </button>
-                  <button id="regenerate-schedule-btn" type="button" className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all active:scale-95">
+                  <button id="regenerate-schedule-btn" type="button" className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all active:scale-95" onClick={handleRegenerate}>
                       Regenerate Schedule
                   </button>
                 </div>
             </header>
+
+            {unplacedTasks.length > 0 && (
+              <div id="unplaced-tasks-warning">
+                <span className="material-symbols-outlined">warning</span>
+                <span>
+                  <strong>{unplacedTasks.length} {unplacedTasks.length === 1 ? 'task' : 'tasks'} couldn't fit in your schedule:</strong>{' '}
+                  {unplacedTasks.map((t) => t.title).join(', ')}.
+                  Try extending your work hours, reducing task durations, or shortening the buffer time.
+                </span>
+              </div>
+            )}
 
             <section id="schedule-container">
                 <table id="schedule-grid">
                     <thead>
                         <tr>
                             <th id="time-column-header">Time</th>
-                            <th>Sunday</th>
-                            <th>Monday</th>
-                            <th>Tuesday</th>
-                            <th>Wednesday</th>
-                            <th>Thursday</th>
-                            <th>Friday</th>
-                            <th>Saturday</th>
+                            {weekDates.map((date, i) => (
+                              <th key={i} className={date.getTime() === todayMidnight.getTime() ? 'today-column' : ''}>
+                                {formatColumnHeader(date)}
+                              </th>
+                            ))}
                         </tr>
                     </thead>
                     <tbody id="schedule-body">
-                        {Array.from({ length: 24 }, (_, hour) => (
-                          <tr key={hour} data-hour={hour}>
-                            <td className="time-cell">{formatHour(hour)}</td>
-                            {[0, 1, 2, 3, 4, 5, 6].map((day) => (
-                              <td key={day} className="day-cell" data-day={day}></td>
-                            ))}
+                        {Array.from({ length: 96 }, (_, slot) => (
+                          <tr key={slot} data-slot={slot} className={slot % 4 === 0 ? 'hour-row' : 'quarter-row'}>
+                            <td className="time-cell">{slot % 4 === 0 ? formatSlot(slot) : ''}</td>
+                            {[0, 1, 2, 3, 4, 5, 6].map((day) => {
+                              const cellKey = `${day}-${slot}`;
+                              if (coveredCells.has(cellKey)) return null;
+                              const block = scheduleBlocksByStartCell[cellKey];
+                              if (block) {
+                                const task = tasks.find((t) => t.id === block.taskId);
+                                const rowSpan = block.endSlot - block.startSlot;
+                                return (
+                                  <td key={day} className="day-cell" data-day={day} rowSpan={rowSpan}>
+                                    <div
+                                      className={`scheduled-task task-${task.category}`}
+                                      onClick={() => setEditingTask(task)}
+                                    >
+                                      <span className="task-block-title">{task.title}</span>
+                                      <span className="task-block-time">
+                                        {formatSlot(block.startSlot)} – {formatSlot(block.endSlot)}
+                                      </span>
+                                    </div>
+                                  </td>
+                                );
+                              }
+                              return <td key={day} className="day-cell" data-day={day}></td>;
+                            })}
                           </tr>
                         ))}
                     </tbody>

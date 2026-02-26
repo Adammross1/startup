@@ -14,7 +14,8 @@ export function SettingsModal({ open, onClose }) {
 
   function handleFieldChange(e) {
     const { name, value, type } = e.target;
-    setForm((prev) => ({ ...prev, [name]: type === 'number' ? Number(value) : value }));
+    const numericFields = new Set(['defaultTaskDuration', 'bufferTime']);
+    setForm((prev) => ({ ...prev, [name]: (type === 'number' || numericFields.has(name)) ? Number(value) : value }));
   }
 
   function handleSave(e) {
@@ -48,10 +49,6 @@ export function SettingsModal({ open, onClose }) {
                     <input type="time" id="work-hours-end" name="workHoursEnd" value={form.workHoursEnd} onChange={handleFieldChange} />
                 </div>
                 
-                <div>
-                    <label htmlFor="break-duration">Break Duration (minutes)</label>
-                    <input type="number" id="break-duration" name="breakDuration" min="5" max="60" value={form.breakDuration} onChange={handleFieldChange} />
-                </div>
             </fieldset>
             
             <fieldset>
@@ -110,8 +107,14 @@ export function SettingsModal({ open, onClose }) {
                 </div>
                 
                 <div>
-                    <label htmlFor="buffer-time">Buffer Time Between Tasks (minutes)</label>
-                    <input type="number" id="buffer-time" name="bufferTime" min="0" max="30" step="5" value={form.bufferTime} onChange={handleFieldChange} />
+                    <label htmlFor="buffer-time">Buffer Time Between Tasks</label>
+                    <select id="buffer-time" name="bufferTime" value={form.bufferTime} onChange={handleFieldChange}>
+                        <option value={0}>None</option>
+                        <option value={15}>15 min</option>
+                        <option value={30}>30 min</option>
+                        <option value={45}>45 min</option>
+                        <option value={60}>1 hr</option>
+                    </select>
                 </div>
             </fieldset>
             

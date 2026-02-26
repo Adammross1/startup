@@ -3,13 +3,12 @@ const SETTINGS_KEY = 'sws_settings';
 export const DEFAULT_SETTINGS = {
   workHoursStart: '09:00',
   workHoursEnd: '17:00',
-  breakDuration: 15,
   defaultTaskDuration: 1,
   defaultCategory: 'homework',
   defaultPriority: 'low',
   schedulingStrategy: 'priority-first',
   chronotype: 'none',
-  bufferTime: 5,
+  bufferTime: 0,
 };
 
 export function getSettings() {

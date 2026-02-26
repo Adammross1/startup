@@ -326,9 +326,36 @@
   background: var(--color-primary-dark);
 }
 
+#unplaced-tasks-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  margin: 0 var(--spacing-2xl) var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+  border-left: 4px solid #f97316;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: #9a3412;
+  line-height: 1.5;
+}
+
+#unplaced-tasks-warning .material-symbols-outlined {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: #f97316;
+}
+
 #schedule-container {
   padding: 0 var(--spacing-2xl) var(--spacing-2xl);
   overflow-x: auto;
+}
+
+#schedule-grid thead th.today-column {
+  background: #eef2ff;
+  color: var(--color-primary);
 }
 
 #schedule-grid {
@@ -367,8 +394,8 @@
 
 .day-cell {
   border: 1px solid var(--color-gray-200);
-  height: 3rem;
-  padding: var(--spacing-xs);
+  height: 0.75rem; /* 4 slots × 0.75rem = 3rem per hour */
+  padding: 0;
   transition: background var(--transition-fast);
   position: relative;
   vertical-align: top;
@@ -391,13 +418,29 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 6rem;
+  bottom: 0;
   padding: var(--spacing-sm);
   border-radius: var(--radius-sm);
   border-left: 4px solid;
   cursor: pointer;
   transition: all var(--transition-base);
   z-index: 1;
+  overflow: hidden;
+}
+
+.hour-row > .time-cell {
+  border-top: 1px solid var(--color-gray-300);
+  padding: 0 var(--spacing-md);
+  line-height: 0.75rem;
+}
+
+.quarter-row > .time-cell {
+  padding: 0;
+  border-top: none;
+}
+
+.quarter-row > .day-cell {
+  border-top-color: transparent;
 }
 
 .scheduled-task:hover {

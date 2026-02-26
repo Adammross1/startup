@@ -326,6 +326,29 @@
   background: var(--color-primary-dark);
 }
 
+#export-calendar-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--color-white);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+#export-calendar-btn:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+#export-calendar-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 #unplaced-tasks-warning {
   display: flex;
   align-items: flex-start;

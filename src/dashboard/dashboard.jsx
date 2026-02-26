@@ -7,6 +7,8 @@ import { useTasks } from '../context/TaskContext';
 import { useSettings } from '../context/SettingsContext';
 import { formatSlot, getWeekDates, formatColumnHeader } from '../utils/dateUtils';
 import { generateSchedule } from '../services/schedulerService';
+import { exportToGoogleCalendar } from '../services/googleCalendarService';
+import { Toast } from '../components/Toast';
 
 function createDefaultFormData(settings) {
   return {
@@ -40,6 +42,10 @@ export function Dashboard() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState(() => createDefaultFormData(settings));
 
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('success');
+  const [isExporting, setIsExporting] = useState(false);
+
   const { blocks: scheduleBlocks, unplacedTasks } = useMemo(
     () => generateSchedule(tasks, settings, weekDates),
     [tasks, settings, weekDates]
@@ -71,6 +77,20 @@ export function Dashboard() {
     deleteTask(deletingTaskId);
     setDeletingTaskId(null);
     setEditingTask(null);
+  }
+
+  function handleExportToGoogleCalendar() {
+    setIsExporting(true);
+    exportToGoogleCalendar(scheduleBlocks, tasks, weekDates[0])
+      .then(({ eventsCreated }) => {
+        setToastType('success');
+        setToastMessage(`${eventsCreated} ${eventsCreated === 1 ? 'event' : 'events'} exported to Google Calendar.`);
+      })
+      .catch((err) => {
+        setToastType('error');
+        setToastMessage(err.message);
+      })
+      .finally(() => setIsExporting(false));
   }
 
   const scheduleBlocksByStartCell = {};
@@ -234,6 +254,15 @@ export function Dashboard() {
                   <button id="open-settings-btn" type="button" aria-label="Open settings" onClick={() => setShowSettings(true)}>
                     <span className="material-symbols-outlined">settings</span>
                   </button>
+                  <button
+                    id="export-calendar-btn"
+                    type="button"
+                    onClick={handleExportToGoogleCalendar}
+                    disabled={scheduleBlocks.length === 0 || isExporting}
+                  >
+                    <span className="material-symbols-outlined">calendar_add_on</span>
+                    {isExporting ? 'Exporting…' : 'Export to Google Calendar'}
+                  </button>
                 </div>
             </header>
 
@@ -296,6 +325,7 @@ export function Dashboard() {
     </div>
 
     <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
+    <Toast message={toastMessage} type={toastType} onDismiss={() => setToastMessage('')} />
     <EditTaskModal
       task={editingTask}
       onSave={handleSaveEdit}

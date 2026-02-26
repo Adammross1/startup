@@ -39,14 +39,11 @@ export function Dashboard() {
   const [showSettings, setShowSettings] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState(() => createDefaultFormData(settings));
-  const [scheduleBlocks, setScheduleBlocks] = useState([]);
-  const [unplacedTasks, setUnplacedTasks] = useState([]);
 
-  useEffect(() => {
-    const { blocks, unplacedTasks: unplaced } = generateSchedule(tasks, settings, weekDates);
-    setScheduleBlocks(blocks);
-    setUnplacedTasks(unplaced);
-  }, [tasks, settings, weekDates]);
+  const { blocks: scheduleBlocks, unplacedTasks } = useMemo(
+    () => generateSchedule(tasks, settings, weekDates),
+    [tasks, settings, weekDates]
+  );
 
   function handleFieldChange(e) {
     const { name, value } = e.target;
@@ -74,12 +71,6 @@ export function Dashboard() {
     deleteTask(deletingTaskId);
     setDeletingTaskId(null);
     setEditingTask(null);
-  }
-
-  function handleRegenerate() {
-    const { blocks, unplacedTasks: unplaced } = generateSchedule(tasks, settings, weekDates);
-    setScheduleBlocks(blocks);
-    setUnplacedTasks(unplaced);
   }
 
   const scheduleBlocksByStartCell = {};
@@ -242,9 +233,6 @@ export function Dashboard() {
                 <div className="header-actions">
                   <button id="open-settings-btn" type="button" aria-label="Open settings" onClick={() => setShowSettings(true)}>
                     <span className="material-symbols-outlined">settings</span>
-                  </button>
-                  <button id="regenerate-schedule-btn" type="button" className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all active:scale-95" onClick={handleRegenerate}>
-                      Regenerate Schedule
                   </button>
                 </div>
             </header>

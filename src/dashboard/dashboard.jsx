@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import './dashboard.css';
-import { SettingsModal } from '../modals/SettingsModal';
 import { EditTaskModal } from '../modals/EditTaskModal';
 import { ConfirmDeleteModal } from '../modals/ConfirmDeleteModal';
 import { useTasks } from '../context/TaskContext';
 import { useSettings } from '../context/SettingsContext';
+import { useUser } from '../context/UserContext';
 import { formatSlot, getWeekDates, formatColumnHeader } from '../utils/dateUtils';
 import { generateSchedule } from '../services/schedulerService';
 import { exportToGoogleCalendar } from '../services/googleCalendarService';
 import { Toast } from '../components/Toast';
 import { useOutletContext } from 'react-router-dom';
+import { connectToWebSocket } from '../services/websocketService';
 
 function createDefaultFormData(settings) {
   return {
@@ -27,9 +28,16 @@ function formatDueDate(dueDate) {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
+const MAX_FEED_ITEMS = 10;
+
+function pushFeedItem(prev, item) {
+  return [item, ...prev].slice(0, MAX_FEED_ITEMS);
+}
+
 export function Dashboard() {
   const { tasks, addTask, updateTask, deleteTask } = useTasks();
   const { settings } = useSettings();
+  const { user } = useUser();
   const weekDates = useMemo(() => getWeekDates(), []);
   const todayMidnight = useMemo(() => {
     const d = new Date();
@@ -48,10 +56,31 @@ export function Dashboard() {
   const [toastType, setToastType] = useState('success');
   const [isExporting, setIsExporting] = useState(false);
 
+  const [activityFeed, setActivityFeed] = useState([]);
+  const [connectionStatus, setConnectionStatus] = useState('disconnected');
+
+  useEffect(() => {
+    const { closeActivityFeedConnection } = connectToWebSocket(
+      (msg) => setActivityFeed((prev) => pushFeedItem(prev, msg)),
+      (status) => setConnectionStatus(status),
+    );
+    return closeActivityFeedConnection;
+  }, []);
+
   const { blocks: scheduleBlocks, unplacedTasks } = useMemo(
     () => generateSchedule(tasks, settings, weekDates),
     [tasks, settings, weekDates]
   );
+
+  function injectUserAction(action, taskTitle) {
+    setActivityFeed((prev) => pushFeedItem(prev, {
+      id: crypto.randomUUID(),
+      user: user?.name ?? user?.email ?? 'You',
+      action,
+      task: taskTitle,
+      timestamp: 'just now',
+    }));
+  }
 
   function handleFieldChange(e) {
     const { name, value } = e.target;
@@ -61,6 +90,7 @@ export function Dashboard() {
   function handleAddTask(e) {
     e.preventDefault();
     addTask(formData);
+    injectUserAction('added', formData.title);
     setFormData(createDefaultFormData(settings));
     setShowAddForm(false);
   }
@@ -71,12 +101,16 @@ export function Dashboard() {
   }
 
   function handleSaveEdit(id, updates) {
+    const task = tasks.find((t) => t.id === id);
     updateTask(id, updates);
+    injectUserAction('edited', updates.title ?? task?.title ?? 'a task');
     setEditingTask(null);
   }
 
   function handleConfirmDelete() {
+    const task = tasks.find((t) => t.id === deletingTaskId);
     deleteTask(deletingTaskId);
+    injectUserAction('deleted', task?.title ?? 'a task');
     setDeletingTaskId(null);
     setEditingTask(null);
   }
@@ -224,27 +258,28 @@ export function Dashboard() {
                 )}
             </section>
 
-            {/* Websocket will show live activity feed here */}
             <section id="live-activity">
                 <h2>Live Activity</h2>
                 <p id="connection-status">
-                    <span id="status-indicator">●</span>
-                    <span id="status-text">Connected</span>
+                    <span
+                      id="status-indicator"
+                      className={connectionStatus === 'connected' ? 'status-connected' : 'status-disconnected'}
+                    >●</span>
+                    <span id="status-text">{connectionStatus === 'connected' ? 'Connected' : 'Disconnected'}</span>
                 </p>
-                
+
                 <ul id="activity-feed">
-                    {/* dummy data for now */}
-                    <li className="activity-item">
-                        <span className="activity-user">Adam</span>
-                        <span className="activity-action">scheduled &quot;Homework&quot;</span>
-                        <span className="activity-time">2 min ago</span>
-                    </li>
-                    <li className="activity-item">
-                        <span className="activity-user">Kayla</span>
-                        <span className="activity-action">completed &quot;Journaling&quot;</span>
-                        <span className="activity-time">5 min ago</span>
-                    </li>
-                    <li id="no-activity-message">No recent activity</li>
+                    {activityFeed.length === 0 ? (
+                      <li id="no-activity-message">No recent activity</li>
+                    ) : (
+                      activityFeed.map((item) => (
+                        <li key={item.id} className="activity-item">
+                            <span className="activity-user">{item.user}</span>
+                            <span className="activity-action">{item.action} &quot;{item.task}&quot;</span>
+                            <span className="activity-time">{item.timestamp}</span>
+                        </li>
+                      ))
+                    )}
                 </ul>
             </section>
         </aside>

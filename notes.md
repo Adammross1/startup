@@ -39,26 +39,4 @@ Setting up Vite with React was straightforward I just needed to make sure index.
 
 ## React Part 2: Reactivity
 
-This was a lot of fun to see it all come together. I had to keep remembering to use React state instead of just manipulating the DOM directly.
-
-Handling the toggling of the checkboxes was particularly interesting.
-
-```jsx
-<div className="input-group sound-button-container">
-  {calmSoundTypes.map((sound, index) => (
-    <div key={index} className="form-check form-switch">
-      <input
-        className="form-check-input"
-        type="checkbox"
-        value={sound}
-        id={sound}
-        onChange={() => togglePlay(sound)}
-        checked={selectedSounds.includes(sound)}
-      ></input>
-      <label className="form-check-label" htmlFor={sound}>
-        {sound}
-      </label>
-    </div>
-  ))}
-</div>
-```
+I really enjoyed making my website come to life. The trickiest part was building all the logic for the different ways you can prioritize/sort tasks. This project has been in the back of my mind for a while and it's something I've given thought to long before starting this project, so I alreayd had a pretty good idea of the different options I wanted, but actually implementing the logic was a fun problem to solve. There's not too much that the app does so outside of the scheduling logic, everything else was pretty typical website UI and was easy to make reactive. I relied a lot on React's useState and useEffect hooks to keep everything in sync and make sure the UI updated automatically whenever the data changed. I also set up context providers for user, tasks, and settings to share state and logic across different parts of the app without having to pass props everywhere.

@@ -114,7 +114,7 @@
 
 #app-container {
   display: flex;
-  height: calc(100vh - 5rem);
+  height: calc(100vh - 131px); /* viewport height minus header and footer */
 }
 
 #sidebar {
@@ -145,8 +145,10 @@
 
 #main-content {
   flex: 1;
-  overflow: auto;
   background: var(--color-gray-50);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 #add-task-form {
@@ -266,6 +268,26 @@
   color: var(--color-exercise);
 }
 
+.task-errands .task-category-badge {
+  background: var(--color-errands-bg);
+  color: var(--color-errands);
+}
+
+.task-social .task-category-badge {
+  background: var(--color-social-bg);
+  color: var(--color-social);
+}
+
+.task-commute .task-category-badge {
+  background: var(--color-commute-bg);
+  color: var(--color-commute);
+}
+
+.task-other .task-category-badge {
+  background: var(--color-other-bg);
+  color: var(--color-other);
+}
+
 .task-name {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
@@ -373,8 +395,11 @@
 }
 
 #schedule-container {
+  flex: 1;
   padding: 0 var(--spacing-2xl) var(--spacing-2xl);
   overflow-x: auto;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 #schedule-grid thead th.today-column {

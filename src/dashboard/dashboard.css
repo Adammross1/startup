@@ -90,6 +90,7 @@
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   min-width: 10rem;
+  z-index: 1000;
 }
 
 #user-dropdown-menu li {

@@ -1,12 +1,12 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useOutletContext } from 'react-router-dom';
 import { Login } from './login/login';
 import { Dashboard } from './dashboard/dashboard';
 import { About } from './about/about';
 import { Layout } from './Layout';
-import { UserProvider } from './context/UserContext';
+import { UserProvider, useUser } from './context/UserContext';
 import { TaskProvider } from './context/TaskContext';
 import { SettingsProvider } from './context/SettingsContext';
 
@@ -19,8 +19,10 @@ export default function App() {
         <Routes>
           <Route path='/' element={<Login />} />
           <Route element={<Layout />}>
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/about' element={<About />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/about' element={<About />} />
+            </Route>
             <Route path='*' element={<NotFound />} />
           </Route>
         </Routes>
@@ -29,6 +31,13 @@ export default function App() {
       </SettingsProvider>
     </UserProvider>
   );
+}
+
+function ProtectedRoute() {
+  const { user } = useUser();
+  const outletContext = useOutletContext();
+  if (!user) return <Navigate to="/" replace />;
+  return <Outlet context={outletContext} />;
 }
 
 function NotFound() {

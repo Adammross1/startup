@@ -9,6 +9,7 @@ import { formatSlot, getWeekDates, formatColumnHeader } from '../utils/dateUtils
 import { generateSchedule } from '../services/schedulerService';
 import { exportToGoogleCalendar } from '../services/googleCalendarService';
 import { Toast } from '../components/Toast';
+import { useOutletContext } from 'react-router-dom';
 
 function createDefaultFormData(settings) {
   return {
@@ -36,9 +37,10 @@ export function Dashboard() {
     return d;
   }, []);
 
+  const { setShowSettings } = useOutletContext();
+
   const [editingTask, setEditingTask] = useState(null);
   const [deletingTaskId, setDeletingTaskId] = useState(null);
-  const [showSettings, setShowSettings] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState(() => createDefaultFormData(settings));
 
@@ -324,7 +326,6 @@ export function Dashboard() {
         </main>
     </div>
 
-    <SettingsModal open={showSettings} onClose={() => setShowSettings(false)} />
     <Toast message={toastMessage} type={toastType} onDismiss={() => setToastMessage('')} />
     <EditTaskModal
       task={editingTask}

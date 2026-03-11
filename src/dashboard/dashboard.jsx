@@ -117,10 +117,14 @@ export function Dashboard() {
 
   function handleExportToGoogleCalendar() {
     setIsExporting(true);
-    exportToGoogleCalendar(scheduleBlocks, tasks, weekDates[0])
+    exportToGoogleCalendar(scheduleBlocks, tasks, weekDates[0], user.accessToken)
       .then(({ eventsCreated }) => {
         setToastType('success');
-        setToastMessage(`${eventsCreated} ${eventsCreated === 1 ? 'event' : 'events'} exported to Google Calendar.`);
+        setToastMessage(
+          eventsCreated === 0
+            ? 'All events already exported. No new events to add.'
+            : `${eventsCreated} ${eventsCreated === 1 ? 'event' : 'events'} exported to Google Calendar.`
+        );
       })
       .catch((err) => {
         setToastType('error');

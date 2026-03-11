@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   getCurrentUser,
-  login as authLogin,
-  registerUser as authRegister,
+  loginWithGoogle as authLoginWithGoogle,
   logout as authLogout,
 } from '../services/authService';
 
@@ -12,20 +11,12 @@ export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const user = getCurrentUser();
-    if (user) {
-      setUser(user);
-    }
+    const existing = getCurrentUser();
+    if (existing) setUser(existing);
   }, []);
 
-  function login(email, password) {
-    const sessionUser = authLogin(email, password);
-    setUser(sessionUser);
-    return sessionUser;
-  }
-
-  function register(name, email, password) {
-    const sessionUser = authRegister(name, email, password);
+  async function loginWithGoogle() {
+    const sessionUser = await authLoginWithGoogle();
     setUser(sessionUser);
     return sessionUser;
   }
@@ -36,7 +27,7 @@ export function UserProvider({ children }) {
   }
 
   return (
-    <UserContext.Provider value={{ user, login, register, logout }}>
+    <UserContext.Provider value={{ user, loginWithGoogle, logout }}>
       {children}
     </UserContext.Provider>
   );

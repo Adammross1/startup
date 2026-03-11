@@ -2,9 +2,30 @@ import React from 'react';
 import './about.css';
 
 export function About() {
+  const [imageUrl, setImageUrl] = React.useState('');
+  const [quote, setQuote] = React.useState('Loading...');
+  const [quoteAuthor, setQuoteAuthor] = React.useState('unknown');
+
+  React.useEffect(() => {
+    setImageUrl('mlb-logo.jpg');
+    setQuote('Show me the code');
+    setQuoteAuthor('Linus Torvalds');
+  }, []);
+
   return (
-    <main id="about-content">
-        <article>
+    <main className="container-fluid bg-secondary text-center" id="about-content">
+      <div className="picture-box">
+        {imageUrl && (
+          <img src={imageUrl} alt="About placeholder" className="img-fluid" />
+        )}
+      </div>
+
+      <div className="quote-box bg-light text-dark">
+        <p className="quote">{quote}</p>
+        <p className="author">- {quoteAuthor}</p>
+      </div>
+
+      <article>
             <h2>About Smart Weekly Scheduler</h2>
             <p>
                 Smart Weekly Scheduler is an intelligent task management and scheduling 

@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useUser } from './UserContext';
-import { getUsersTasks, addTask as svcAddTask, updateTask as svcUpdateTask, deleteTask as svcDeleteTask } from '../services/taskService';
+import {
+  getUsersTasks,
+  addTask as svcAddTask,
+  updateTask as svcUpdateTask,
+  deleteTask as svcDeleteTask,
+} from '../services/taskService';
 
 const TaskContext = createContext(null);
 
@@ -9,23 +14,27 @@ export function TaskProvider({ children }) {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    setTasks(user ? getUsersTasks(user.email) : []);
+    if (!user) {
+      setTasks([]);
+      return;
+    }
+    getUsersTasks().then(setTasks).catch(() => setTasks([]));
   }, [user]);
 
-  function addTask(task) {
-    const newTask = svcAddTask(user.email, task);
+  async function addTask(task) {
+    const newTask = await svcAddTask(null, task);
     setTasks((prev) => [...prev, newTask]);
     return newTask;
   }
 
-  function updateTask(id, updates) {
-    const updated = svcUpdateTask(user.email, id, updates);
+  async function updateTask(id, updates) {
+    const updated = await svcUpdateTask(null, id, updates);
     setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
     return updated;
   }
 
-  function deleteTask(id) {
-    svcDeleteTask(user.email, id);
+  async function deleteTask(id) {
+    await svcDeleteTask(null, id);
     setTasks((prev) => prev.filter((t) => t.id !== id));
   }
 

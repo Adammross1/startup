@@ -1,5 +1,3 @@
-const SETTINGS_KEY = 'sws_settings';
-
 export const DEFAULT_SETTINGS = {
   workHoursStart: '09:00',
   workHoursEnd: '17:00',
@@ -11,16 +9,23 @@ export const DEFAULT_SETTINGS = {
   bufferTime: 0,
 };
 
-export function getSettings() {
-  const storedSettingsJson = localStorage.getItem(SETTINGS_KEY);
-  if (!storedSettingsJson) return { ...DEFAULT_SETTINGS };
-  try {
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(storedSettingsJson) };
-  } catch {
-    return { ...DEFAULT_SETTINGS };
+async function apiFetch(url, options = {}) {
+  const res = await fetch(url, { credentials: 'include', ...options });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `Request failed (${res.status})`);
   }
+  return res.json();
+}
+
+export function getSettings() {
+  return apiFetch('/api/settings');
 }
 
 export function saveSettings(settings) {
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  return apiFetch('/api/settings', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(settings),
+  });
 }

@@ -1,17 +1,25 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getSettings, saveSettings } from '../services/settingsService';
+import { useUser } from './UserContext';
+import { DEFAULT_SETTINGS, getSettings, saveSettings } from '../services/settingsService';
 
 const SettingsContext = createContext(null);
 
 export function SettingsProvider({ children }) {
-  const [settings, setSettings] = useState(getSettings);
+  const { user } = useUser();
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
 
   useEffect(() => {
-    saveSettings(settings);
-  }, [settings]);
+    if (!user) {
+      setSettings(DEFAULT_SETTINGS);
+      return;
+    }
+    getSettings().then(setSettings).catch(() => setSettings(DEFAULT_SETTINGS));
+  }, [user]);
 
-  function updateSettings(updates) {
-    setSettings((prev) => ({ ...prev, ...updates }));
+  async function updateSettings(updates) {
+    const merged = { ...settings, ...updates };
+    setSettings(merged);
+    await saveSettings(merged);
   }
 
   return (

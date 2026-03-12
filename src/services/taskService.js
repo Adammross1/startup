@@ -1,31 +1,32 @@
-function getStorageKeyForUser(userEmail) {
-  return `sws_tasks_${userEmail}`;
+async function apiFetch(url, options = {}) {
+  const res = await fetch(url, { credentials: 'include', ...options });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `Request failed (${res.status})`);
+  }
+  return res.status === 204 ? null : res.json();
 }
 
-export function getUsersTasks(userEmail) {
-  const storedTasksJson = localStorage.getItem(getStorageKeyForUser(userEmail));
-  return storedTasksJson ? JSON.parse(storedTasksJson) : [];
+export function getUsersTasks() {
+  return apiFetch('/api/tasks');
 }
 
-function saveTasks(userEmail, tasks) {
-  localStorage.setItem(getStorageKeyForUser(userEmail), JSON.stringify(tasks));
+export function addTask(_userEmail, task) {
+  return apiFetch('/api/tasks', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(task),
+  });
 }
 
-export function addTask(userEmail, task) {
-  const tasks = getUsersTasks(userEmail);
-  const newTask = { ...task, id: crypto.randomUUID(), createdAt: new Date().toISOString() };
-  saveTasks(userEmail, [...tasks, newTask]);
-  return newTask;
+export function updateTask(_userEmail, id, updates) {
+  return apiFetch(`/api/tasks/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
 }
 
-export function updateTask(userEmail, id, updates) {
-  const tasks = getUsersTasks(userEmail);
-  const updatedTasks = tasks.map((t) => (t.id === id ? { ...t, ...updates } : t));
-  saveTasks(userEmail, updatedTasks);
-  return updatedTasks.find((t) => t.id === id);
-}
-
-export function deleteTask(userEmail, id) {
-  const tasks = getUsersTasks(userEmail).filter((t) => t.id !== id);
-  saveTasks(userEmail, tasks);
+export function deleteTask(_userEmail, id) {
+  return apiFetch(`/api/tasks/${id}`, { method: 'DELETE' });
 }

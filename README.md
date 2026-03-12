@@ -124,12 +124,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Supports registration, login, logout, and restricted endpoint** - I did not complete this part of the deliverable.
+- [x] **Node.js/Express HTTP service** - Created `service/index.js` running on port 4000.
+- [x] **Static middleware for frontend** - Express serves the built frontend via `express.static('public')`.
+- [x] **Calls to third party endpoints** - Frontend calls the Google Calendar API to export weekly schedule events.
+- [x] **Backend service endpoints** - Backend provides REST endpoints for auth, tasks, and settings.
+- [x] **Frontend calls service endpoints** - Frontend uses `fetch` to call all task and settings endpoints on the backend.
+- [x] **Supports registration, login, logout, and restricted endpoint** - Implemented register, login, logout with bcrypt password hashing, UUID session tokens in httpOnly cookies, and a `requireAuth` middleware protecting task/settings routes.
 
 ## 🚀 DB deliverable
 

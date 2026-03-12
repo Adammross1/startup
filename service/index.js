@@ -13,6 +13,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const users = new Map();
 const authTokens = new Map();
+const tasks = new Map();
+const userSettings = new Map();
+
+const DEFAULT_SETTINGS = {
+  workHoursStart: '09:00',
+  workHoursEnd: '17:00',
+  defaultTaskDuration: 1,
+  defaultCategory: 'homework',
+  defaultPriority: 'low',
+  schedulingStrategy: 'priority-first',
+  chronotype: 'none',
+  bufferTime: 0,
+};
 
 function requireAuth(req, res, next) {
   const token = req.cookies.token;
@@ -75,6 +88,51 @@ app.get('/api/auth/me', requireAuth, (req, res) => {
   const user = users.get(req.userEmail);
   if (!user) return res.status(401).json({ error: 'User not found.' });
   res.json({ name: user.name, email: user.email });
+});
+
+app.get('/api/tasks', requireAuth, (req, res) => {
+  res.json(tasks.get(req.userEmail) ?? []);
+});
+
+app.post('/api/tasks', requireAuth, (req, res) => {
+  const userTasks = tasks.get(req.userEmail) ?? [];
+  const newTask = {
+    ...req.body,
+    id: uuidv4(),
+    createdAt: new Date().toISOString(),
+  };
+  tasks.set(req.userEmail, [...userTasks, newTask]);
+  res.status(201).json(newTask);
+});
+
+app.put('/api/tasks/:id', requireAuth, (req, res) => {
+  const userTasks = tasks.get(req.userEmail) ?? [];
+  const idx = userTasks.findIndex((t) => t.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'Task not found.' });
+  const updated = { ...userTasks[idx], ...req.body };
+  userTasks[idx] = updated;
+  tasks.set(req.userEmail, userTasks);
+  res.json(updated);
+});
+
+app.delete('/api/tasks/:id', requireAuth, (req, res) => {
+  const userTasks = tasks.get(req.userEmail) ?? [];
+  const filtered = userTasks.filter((t) => t.id !== req.params.id);
+  if (filtered.length === userTasks.length) {
+    return res.status(404).json({ error: 'Task not found.' });
+  }
+  tasks.set(req.userEmail, filtered);
+  res.sendStatus(204);
+});
+
+app.get('/api/settings', requireAuth, (req, res) => {
+  res.json({ ...DEFAULT_SETTINGS, ...(userSettings.get(req.userEmail) ?? {}) });
+});
+
+app.put('/api/settings', requireAuth, (req, res) => {
+  const merged = { ...DEFAULT_SETTINGS, ...req.body };
+  userSettings.set(req.userEmail, merged);
+  res.json(merged);
 });
 
 app.get('/api/health', (_req, res) => {

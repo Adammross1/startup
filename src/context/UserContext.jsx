@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   getCurrentUser,
-  loginWithGoogle as authLoginWithGoogle,
+  login as authLogin,
+  register as authRegister,
   logout as authLogout,
+  requestGoogleCalendarAccess,
 } from '../services/authService';
 
 const UserContext = createContext(null);
@@ -11,23 +13,28 @@ export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const existing = getCurrentUser();
-    if (existing) setUser(existing);
+    getCurrentUser().then((u) => { if (u) setUser(u); });
   }, []);
 
-  async function loginWithGoogle() {
-    const sessionUser = await authLoginWithGoogle();
+  async function login(email, password) {
+    const sessionUser = await authLogin(email, password);
     setUser(sessionUser);
     return sessionUser;
   }
 
-  function logout() {
-    authLogout();
+  async function register(name, email, password) {
+    const sessionUser = await authRegister(name, email, password);
+    setUser(sessionUser);
+    return sessionUser;
+  }
+
+  async function logout() {
+    await authLogout();
     setUser(null);
   }
 
   return (
-    <UserContext.Provider value={{ user, loginWithGoogle, logout }}>
+    <UserContext.Provider value={{ user, login, register, logout, requestGoogleCalendarAccess }}>
       {children}
     </UserContext.Provider>
   );

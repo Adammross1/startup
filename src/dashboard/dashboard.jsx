@@ -37,7 +37,7 @@ function pushFeedItem(prev, item) {
 export function Dashboard() {
   const { tasks, addTask, updateTask, deleteTask } = useTasks();
   const { settings } = useSettings();
-  const { user } = useUser();
+  const { user, requestGoogleCalendarAccess } = useUser();
   const weekDates = useMemo(() => getWeekDates(), []);
   const todayMidnight = useMemo(() => {
     const d = new Date();
@@ -117,7 +117,8 @@ export function Dashboard() {
 
   function handleExportToGoogleCalendar() {
     setIsExporting(true);
-    exportToGoogleCalendar(scheduleBlocks, tasks, weekDates[0], user.accessToken)
+    requestGoogleCalendarAccess()
+      .then((accessToken) => exportToGoogleCalendar(scheduleBlocks, tasks, weekDates[0], accessToken))
       .then(({ eventsCreated }) => {
         setToastType('success');
         setToastMessage(

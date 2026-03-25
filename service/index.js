@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
+const DB = require('../database.js');
 
 const app = express();
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
@@ -42,12 +43,14 @@ app.post('/api/auth/register', async (req, res) => {
   if (!name || !email || !password) {
     return res.status(400).json({ error: 'Name, email, and password are required.' });
   }
-  if (users.has(email)) {
+
+  const existingUser = await DB.getUser(email);
+  if (existingUser) {
     return res.status(409).json({ error: 'An account with this email already exists.' });
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
-  users.set(email, { name, email, passwordHash });
+  await DB.addUser({ name, email, passwordHash });
 
   const token = uuidv4();
   authTokens.set(token, email);

@@ -19,4 +19,12 @@ const settingsCollection = db.collection('settings');
   }
 })();
 
-module.exports = {};
+async function getUser(email) {
+  return userCollection.findOne({ email });
+}
+
+async function addUser(user) {
+  await userCollection.insertOne(user);
+}
+
+module.exports = { getUser, addUser };

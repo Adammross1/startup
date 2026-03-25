@@ -64,7 +64,7 @@ app.post('/api/auth/login', async (req, res) => {
     return res.status(400).json({ error: 'Email and password are required.' });
   }
 
-  const user = users.get(email);
+  const user = await DB.getUser(email);
   if (!user) {
     return res.status(401).json({ error: 'No account found with that email. Please register first.' });
   }
@@ -87,8 +87,8 @@ app.delete('/api/auth/logout', (req, res) => {
   res.sendStatus(204);
 });
 
-app.get('/api/auth/me', requireAuth, (req, res) => {
-  const user = users.get(req.userEmail);
+app.get('/api/auth/me', requireAuth, async (req, res) => {
+  const user = await DB.getUser(req.userEmail);
   if (!user) return res.status(401).json({ error: 'User not found.' });
   res.json({ name: user.name, email: user.email });
 });

@@ -27,4 +27,20 @@ async function addUser(user) {
   await userCollection.insertOne(user);
 }
 
-module.exports = { getUser, addUser };
+async function getTasks(email) {
+  return taskCollection.find({ email }).toArray();
+}
+
+async function addTask(task) {
+  return taskCollection.insertOne(task);
+}
+
+async function updateTask(id, update) {
+  return taskCollection.updateOne({ id }, { $set: update });
+}
+
+async function deleteTask(id) {
+  return taskCollection.deleteOne({ id });
+}
+
+module.exports = { getUser, addUser, getTasks, addTask, updateTask, deleteTask };

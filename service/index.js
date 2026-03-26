@@ -93,38 +93,37 @@ app.get('/api/auth/me', requireAuth, async (req, res) => {
   res.json({ name: user.name, email: user.email });
 });
 
-app.get('/api/tasks', requireAuth, (req, res) => {
-  res.json(tasks.get(req.userEmail) ?? []);
+app.get('/api/tasks', requireAuth, async (req, res) => {
+  const userTasks = await DB.getTasks(req.userEmail);
+  res.json(userTasks);
 });
 
-app.post('/api/tasks', requireAuth, (req, res) => {
-  const userTasks = tasks.get(req.userEmail) ?? [];
+app.post('/api/tasks', requireAuth, async (req, res) => {
   const newTask = {
     ...req.body,
     id: uuidv4(),
+    email: req.userEmail,
     createdAt: new Date().toISOString(),
   };
-  tasks.set(req.userEmail, [...userTasks, newTask]);
+  await DB.addTask(newTask);
   res.status(201).json(newTask);
 });
 
-app.put('/api/tasks/:id', requireAuth, (req, res) => {
-  const userTasks = tasks.get(req.userEmail) ?? [];
-  const idx = userTasks.findIndex((t) => t.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ error: 'Task not found.' });
-  const updated = { ...userTasks[idx], ...req.body };
-  userTasks[idx] = updated;
-  tasks.set(req.userEmail, userTasks);
+app.put('/api/tasks/:id', requireAuth, async (req, res) => {
+  const result = await DB.updateTask(req.params.id, req.body);
+  if (result.matchedCount === 0) {
+    return res.status(404).json({ error: 'Task not found.' });
+  }
+  const userTasks = await DB.getTasks(req.userEmail);
+  const updated = userTasks.find((t) => t.id === req.params.id);
   res.json(updated);
 });
 
-app.delete('/api/tasks/:id', requireAuth, (req, res) => {
-  const userTasks = tasks.get(req.userEmail) ?? [];
-  const filtered = userTasks.filter((t) => t.id !== req.params.id);
-  if (filtered.length === userTasks.length) {
+app.delete('/api/tasks/:id', requireAuth, async (req, res) => {
+  const result = await DB.deleteTask(req.params.id);
+  if (result.deletedCount === 0) {
     return res.status(404).json({ error: 'Task not found.' });
   }
-  tasks.set(req.userEmail, filtered);
   res.sendStatus(204);
 });
 

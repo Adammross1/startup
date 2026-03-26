@@ -43,4 +43,20 @@ async function deleteTask(id) {
   return taskCollection.deleteOne({ id });
 }
 
-module.exports = { getUser, addUser, getTasks, addTask, updateTask, deleteTask };
+async function getSettings(email) {
+  return settingsCollection.findOne({ email });
+}
+
+async function updateSettings(email, settings) {
+  return settingsCollection.updateOne(
+    { email },
+    { $set: settings },
+    { upsert: true }
+  );
+}
+
+module.exports = {
+  getUser, addUser,
+  getTasks, addTask, updateTask, deleteTask,
+  getSettings, updateSettings,
+};

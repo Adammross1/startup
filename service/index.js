@@ -127,13 +127,14 @@ app.delete('/api/tasks/:id', requireAuth, async (req, res) => {
   res.sendStatus(204);
 });
 
-app.get('/api/settings', requireAuth, (req, res) => {
-  res.json({ ...DEFAULT_SETTINGS, ...(userSettings.get(req.userEmail) ?? {}) });
+app.get('/api/settings', requireAuth, async (req, res) => {
+  const saved = await DB.getSettings(req.userEmail);
+  res.json({ ...DEFAULT_SETTINGS, ...(saved ?? {}) });
 });
 
-app.put('/api/settings', requireAuth, (req, res) => {
-  const merged = { ...DEFAULT_SETTINGS, ...req.body };
-  userSettings.set(req.userEmail, merged);
+app.put('/api/settings', requireAuth, async (req, res) => {
+  const merged = { ...DEFAULT_SETTINGS, ...req.body, email: req.userEmail };
+  await DB.updateSettings(req.userEmail, merged);
   res.json(merged);
 });
 

@@ -135,8 +135,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Stores data in MongoDB** - I did not complete this part of the deliverable.
-- [ ] **Stores credentials in MongoDB** - I did not complete this part of the deliverable.
+- [x] **Stores data in MongoDB** - Tasks and user settings are persisted in MongoDB Atlas using separate collections (`tasks` and `settings`). Each task is its own document associated with a user by email. Settings use upsert so the first save creates the document automatically.
+- [x] **Stores credentials in MongoDB** - User credentials (name, email, and bcrypt-hashed password) are stored in a `users` collection. Registration checks for duplicate emails via a database lookup before inserting. Kept session tokens in memory because they don't need to persist through a server restart.
 
 ## 🚀 WebSocket deliverable
 

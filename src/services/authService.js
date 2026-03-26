@@ -6,9 +6,8 @@ export async function register(name, email, password) {
     credentials: 'include',
     body: JSON.stringify({ name, email, password }),
   });
-  const nameAndEmail = await res.json();
-  if (!res.ok) throw new Error(nameAndEmail.error ?? 'Registration failed.');
-  return nameAndEmail;
+  if (!res.ok) throw new Error('Registration failed. Please try again.');
+  return res.json();
 }
 
 export async function login(email, password) {
@@ -18,9 +17,8 @@ export async function login(email, password) {
     credentials: 'include',
     body: JSON.stringify({ email, password }),
   });
-  const nameAndEmail = await res.json();
-  if (!res.ok) throw new Error(nameAndEmail.error ?? 'Login failed.');
-  return nameAndEmail;
+  if (!res.ok) throw new Error('Login failed. Please try again.');
+  return res.json();
 }
 
 export async function logout() {

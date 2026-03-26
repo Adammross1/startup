@@ -12,10 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const users = new Map();
 const authTokens = new Map();
-const tasks = new Map();
-const userSettings = new Map();
 
 const DEFAULT_SETTINGS = {
   workHoursStart: '09:00',

@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const DB = require('./database.js');
+const { peerProxy } = require('./peerProxy.js');
 
 const app = express();
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
@@ -143,6 +144,8 @@ app.get('/{*splat}', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Smart Weekly Scheduler backend listening on port ${port}`);
 });
+
+peerProxy(server);

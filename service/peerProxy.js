@@ -20,6 +20,32 @@ function peerProxy(httpServer) {
     console.log('WebSocket client connected');
     clients.add(ws);
 
+    ws.on('message', (rawMessage) => {
+      try {
+        const payload = JSON.parse(rawMessage.toString());
+        if (!payload || typeof payload !== 'object') {
+          return;
+        }
+
+        const messageForPeers = {
+          id: uuidv4(),
+          user: payload.user,
+          action: payload.action,
+          task: payload.task,
+          timestamp: 'just now',
+        };
+
+        const serialized = JSON.stringify(messageForPeers);
+        clients.forEach((client) => {
+          if (client !== ws && client.readyState === 1) {
+            client.send(serialized);
+          }
+        });
+      } catch {
+        // Ignore so one bad message doesn't break the connection.
+      }
+    });
+
     ws.on('close', () => {
       console.log('WebSocket client disconnected');
       clients.delete(ws);

@@ -1,9 +1,26 @@
 const { WebSocketServer } = require('ws');
 const { v4: uuidv4 } = require('uuid');
 
+const HEARTBEAT_INTERVAL_MS = 30000;
+
 function peerProxy(httpServer) {
   const wss = new WebSocketServer({ noServer: true });
   const clients = new Set();
+  const heartbeatInterval = setInterval(() => {
+    clients.forEach((client) => {
+      if (client.isAlive === false) {
+        client.terminate();
+        return;
+      }
+
+      client.isAlive = false;
+      client.ping();
+    });
+  }, HEARTBEAT_INTERVAL_MS);
+
+  httpServer.on('close', () => {
+    clearInterval(heartbeatInterval);
+  });
 
   httpServer.on('upgrade', (req, socket, head) => {
     const pathname = new URL(req.url, `http://${req.headers.host}`).pathname;
@@ -19,6 +36,11 @@ function peerProxy(httpServer) {
   wss.on('connection', (ws) => {
     console.log('WebSocket client connected');
     clients.add(ws);
+    ws.isAlive = true;
+
+    ws.on('pong', () => {
+      ws.isAlive = true;
+    });
 
     ws.on('message', (rawMessage) => {
       try {

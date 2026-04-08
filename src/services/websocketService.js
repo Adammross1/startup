@@ -16,7 +16,8 @@ export function connectToWebSocket(onMessage, onStatusChange) {
 
   socket.onmessage = async (msg) => {
     try {
-      const parsed = JSON.parse(await msg.data.text());
+      const raw = typeof msg.data === 'string' ? msg.data : await msg.data.text();
+      const parsed = JSON.parse(raw);
       onMessage(parsed);
     } catch {
       // Ignore so one bad message does not break updates.
@@ -24,6 +25,10 @@ export function connectToWebSocket(onMessage, onStatusChange) {
   };
 
   function sendActivity(payload) {
+    if (socket.readyState !== WebSocket.OPEN) {
+      return;
+    }
+
     socket.send(JSON.stringify(payload));
   }
 

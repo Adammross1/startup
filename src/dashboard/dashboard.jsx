@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import './dashboard.css';
 import { EditTaskModal } from '../modals/EditTaskModal';
 import { ConfirmDeleteModal } from '../modals/ConfirmDeleteModal';
@@ -58,13 +58,19 @@ export function Dashboard() {
 
   const [activityFeed, setActivityFeed] = useState([]);
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
+  const sendActivityRef = useRef(() => {});
 
   useEffect(() => {
-    const { closeActivityFeedConnection } = connectToWebSocket(
+    const { sendActivity, closeActivityFeedConnection } = connectToWebSocket(
       (msg) => setActivityFeed((prev) => pushFeedItem(prev, msg)),
       (status) => setConnectionStatus(status),
     );
-    return closeActivityFeedConnection;
+    sendActivityRef.current = sendActivity;
+
+    return () => {
+      sendActivityRef.current = () => {};
+      closeActivityFeedConnection();
+    };
   }, []);
 
   const { blocks: scheduleBlocks, unplacedTasks } = useMemo(
@@ -73,6 +79,9 @@ export function Dashboard() {
   );
 
   function injectUserAction(action, taskTitle) {
+    const actor = user?.name ?? user?.email ?? 'Unknown user';
+    sendActivityRef.current({ user: actor, action, task: taskTitle });
+
     setActivityFeed((prev) => pushFeedItem(prev, {
       id: crypto.randomUUID(),
       user: user?.name ?? user?.email ?? 'You',

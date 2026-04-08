@@ -11,9 +11,26 @@ const UserContext = createContext(null);
 
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    getCurrentUser().then((u) => { if (u) setUser(u); });
+    let cancelled = false;
+
+    getCurrentUser()
+      .then((u) => {
+        if (!cancelled && u) {
+          setUser(u);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setAuthLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   async function login(email, password) {
@@ -34,7 +51,7 @@ export function UserProvider({ children }) {
   }
 
   return (
-    <UserContext.Provider value={{ user, login, register, logout, requestGoogleCalendarAccess }}>
+    <UserContext.Provider value={{ user, authLoading, login, register, logout, requestGoogleCalendarAccess }}>
       {children}
     </UserContext.Provider>
   );

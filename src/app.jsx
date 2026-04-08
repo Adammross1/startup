@@ -34,8 +34,9 @@ export default function App() {
 }
 
 function ProtectedRoute() {
-  const { user } = useUser();
+  const { user, authLoading } = useUser();
   const outletContext = useOutletContext();
+  if (authLoading) return null;
   if (!user) return <Navigate to="/" replace />;
   return <Outlet context={outletContext} />;
 }

@@ -48,3 +48,12 @@ I converted the app into a proper web service using Node.js and Express. The bac
 ## DB
 
 I replaced the four in-memory Maps in the Express backend with MongoDB Atlas using the mongodb Node.js driver. I created a /database.js module that connects on startup, pings the cluster to verify the connection, and exports helper functions for each collection. There are three collections: users (credentials), tasks (one document per task, keyed by email and UUID), and settings (one document per user, upserted on save). I kept auth session tokens in memory since they're session-scoped and don't need to survive a server restart. One thing that tripped me up was that the hostname field in dbConfig.json already includes the @ prefix, so the connection string template can't add another one or you get a two @ symbols which throws an error. The mongodb package also needs to be installed inside the service/ folder (not the root) since that's where Node resolves modules from when running the backend.
+
+## WebSocket
+
+This part was honestly pretty fun once all the pieces were wired together. I used the ws package on the backend and attached it to the Express server. Had to make sure to set up proxy in Vite so /ws traffic actually reached port 4000 during local dev.
+
+On the frontend, I replaced my websocket stub with a real browser WebSocket client. The Live Activity feed now sends task actions (add/edit/delete) and receives events from other connected clients in real time. I don't necessarily think this functionality makes sense in practice, but I just added it to check off implementing a websocket. I'll probably remove this after the class is over haha. I also added reconnect logic with exponential backoff so if the backend restarts, it comes back automatically without needing a manual refresh.
+
+The biggest gotcha for me was message parsing in the browser. I was reading frames like blobs everywhere, but text frames can come in as plain strings, so messages were getting swallowed by the catch block until I handled both cases. Another thing that confused me while testing was having an old backend process still running on port 4000, which made it look like Ctrl+C wasn't doing anything. Once I killed the stale process, connection status testing made way more sense.
+

@@ -147,3 +147,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
 - [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
 - [ ] **Application is fully functional** - I did not complete this part of the deliverable.
+- [x] **Backend listens for WebSocket connection** - Added a ws WebSocket server in service/peerProxy.js, attached it to the existing HTTP server in service/index.js, and handled upgrades on /ws.
+- [x] **Frontend makes WebSocket connection** - Replaced the stub in src/services/websocketService.js with a real browser WebSocket client using the current host/port and ws or wss protocol.
+- [x] **Data sent over WebSocket connection** - Dashboard add/edit/delete actions now send { user, action, task }. backend enriches with id and timestamp and broadcasts to peers.
+- [x] **WebSocket data displayed** - Incoming WebSocket events are parsed and appended to the Live Activity feed in the dashboard sidebar.
+- [x] **Application is fully functional** - Added heartbeat ping/pong cleanup, Vite /ws proxy support, and automatic reconnect with exponential backoff to keep live updates working during local server restarts.

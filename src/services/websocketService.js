@@ -14,10 +14,25 @@ export function connectToWebSocket(onMessage, onStatusChange) {
     onStatusChange('disconnected');
   };
 
+  socket.onmessage = async (msg) => {
+    try {
+      const parsed = JSON.parse(await msg.data.text());
+      onMessage(parsed);
+    } catch {
+      // Ignore so one bad message does not break updates.
+    }
+  };
+
+  function sendActivity(payload) {
+    socket.send(JSON.stringify(payload));
+  }
+
   return {
+    sendActivity,
     closeActivityFeedConnection: () => {
       socket.onopen = null;
       socket.onclose = null;
+      socket.onmessage = null;
       socket.close();
     },
   };
